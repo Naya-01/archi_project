@@ -177,11 +177,36 @@ struct encrypted_file
  */
 static char *body_processing(ngx_link_func_ctx_t *ctx, char *body,
                              size_t body_len, size_t *resp_len) {
-  /**
-   * TODO: Replace the example code below with your own code.
-   */
-  *resp_len = body_len;
-  return body;
+    /**
+     * TODO: Replace the example code below with your own code.
+     */
+    struct encrypted_file encrypted_file;
+    // complete_algorithm(body, body_len, mutiplication_matrix, &encrypted_file);
+
+    struct parsed_request parsed_request;
+    parse_request(body, body_len, &parsed_request);
+
+    uint32_t K = floor(sqrt(parsed_request.file_size / sizeof(int))); // Ensure that your matrix is squared
+    int *product = (int *)malloc(K * K * sizeof(int));                //  Do not worry about freeing memory
+
+    int *mutiplication_matrix = get_multiplication_matrix(ctx, K);
+
+    for (size_t i = 0; i < parsed_request.nb_rounds; i++)
+    {
+
+        multiply_matrix(parsed_request.file, mutiplication_matrix, product, K);
+        cipher(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+        // Swap pointers for the next iteration
+        int *tmp = parsed_request.file;
+        parsed_request.file = product;
+        product = tmp;
+    }
+
+    encrypted_file.file = (char *)parsed_request.file;
+    encrypted_file.file_size = K * K * sizeof(int);
+
+    *resp_len = encrypted_file.file_size;
+    return encrypted_file.file;
 }
 
 void main_function(ngx_link_func_ctx_t *ctx)
