@@ -1,0 +1,11 @@
+*.o
+*.so
+logs
+project/measurements/npf
+project/measurements/results
+project/measurements/test*
+project/measurements/venv/*
+nginx/*
+nginx-link-function/
+
+server_implementation/wrk2
