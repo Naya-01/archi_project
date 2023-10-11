@@ -32,29 +32,6 @@ int *get_multiplication_matrix(ngx_link_func_ctx_t *ctx, uint32_t K) {
   return multiplication_matrix;
 }
 
-struct parsed_request
-{
-    // The size of the key
-    uint32_t key_size;
-    // The size of the file
-    uint32_t file_size;
-    // The number of rounds to apply
-    uint16_t nb_rounds;
-    // A pointer to the start of the key
-    int *key;
-    // A pointer to tjhe start of a file
-    int *file;
-};
-
-/**
- * @brief Parse the a raw request into a nice struct
- *
- * @param raw_request : A big string containing the request as it is received by the server
- * @param raw_request_len : The size of the raw request
- * @param request : A struct that will contain the parsed request at the end of the function
- *
- * @note The variable `request` should be modified to store the parsed representation of the request
- */
 void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_request *request)
 {
     const char *comma = strchr(raw_request, ',');
@@ -209,8 +186,7 @@ static char *body_processing(ngx_link_func_ctx_t *ctx, char *body,
     return encrypted_file.file;
 }
 
-void main_function(ngx_link_func_ctx_t *ctx)
-{
+void main_function(ngx_link_func_ctx_t *ctx) {
 
   // Retrieve request's body
   char *body = (char *)ctx->req_body;
