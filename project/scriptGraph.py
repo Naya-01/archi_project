@@ -2,7 +2,7 @@ import os
 import re
 
 # Absolute file path
-absolute_path = os.path.abspath('./project/results/test.txt')
+absolute_path = os.path.abspath('./results/test.txt')
 
 with open(absolute_path, 'r') as fichier:
     content = fichier.read()
