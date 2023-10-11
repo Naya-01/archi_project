@@ -2,7 +2,6 @@
 echo "Wow ! Don't just execute random scripts from the internet are you crazy ?"
 echo "By the way this is where the scripts that runs your experiments and plots your data should go ! :)"
 
-
 results_dir="results"
 mkdir -p $results_dir
 
@@ -24,6 +23,7 @@ for rate in "${request_rates[@]}"; do
 
       # Execute it from "project-2023-student/project"
       ../wrk2/wrk http://localhost:8888/ -d$test_duration --latency -R$rate -s ./wrk_scripts/post.lua >> $output_file
+      #../wrk2-DeathStarBench/wrk http://localhost:8888/  -d$test_duration  --latency -R$rate -s ./wrk_scripts/test.lua > $output_file
 
       echo "Test completed for rate=${rate}, size=${size}, key=${key}"
 
@@ -33,4 +33,3 @@ done
 
 # call script python
 python scriptGraph.py
-
