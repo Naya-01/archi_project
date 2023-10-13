@@ -1,7 +1,7 @@
 import os
 import re
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 def parse_In_Details(content):
     lines = content.split('\n')
@@ -22,6 +22,13 @@ def parse_In_Details(content):
     return result
 
 
+def convert_to_milliseconds(value):
+    if "us" in value:
+        value = float(value.replace("us", "")) / 1000  
+    elif "ms" in value:
+        value = float(value.replace("ms", "")) 
+    return value
+
 def parse_Latency_Dist(content):
     lines = content.split('\n')
     start_index = lines.index(
@@ -31,8 +38,10 @@ def parse_Latency_Dist(content):
     result = []
     for line in lines[start_index+1:end_index]:
         colonnes = line.split()
-        r = colonnes[:2]
-        result.append(r)
+        percent, latency = colonnes[:2]
+        latency = convert_to_milliseconds(latency)
+        percent = percent.split("%")[0]
+        result.append([percent, latency])
 
     return result
 
@@ -56,3 +65,9 @@ for file in os.listdir(folder):
 
             latency = parse_Latency_Dist(content)
             details = parse_In_Details(content)
+            print(latency)
+
+#example
+fig = plt.figure()
+plt.plot(np.sin(np.linspace(0, 20, 100)));
+plt.savefig("./ok.PNG")
