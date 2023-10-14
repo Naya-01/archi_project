@@ -1,29 +1,32 @@
-#!/usr/bin/bash
-echo "Wow ! Don't just execute random scripts from the internet are you crazy ?"
-echo "By the way this is where the scripts that runs your experiments and plots your data should go ! :)"
+#!/bin/bash
 
+echo "Executing performance evaluation for generated Lua scripts..."
+
+# Créer le répertoire pour les résultats
 results_dir="results"
-mkdir -p $results_dir
+mkdir -p "$results_dir"
 
-request_rates=("100")
-file_sizes=("1024")
-key_sizes=("16")
-#request_rates=("100" "500" "1000")
-#file_sizes=("1024" "4096" "8192")
-#key_sizes=("16" "32" "64")
+# Paramètres à tester
+numRounds=("1" "5")
+file_sizes=("100")
+key_sizes=("8" "16")
 
-#threads=4
+# Durée du test (en secondes)
 test_duration=30
 
-for rate in "${request_rates[@]}"; do
+# Itérer sur les combinaisons de paramètres
+for numRound in "${numRounds[@]}"; do
   for size in "${file_sizes[@]}"; do
     for key in "${key_sizes[@]}"; do
 
-      output_file="$results_dir/result_rate${rate}_size${size}_key${key}.csv"
+      # Chemin du script Lua généré
+      script_file="script_${key}_${size}_${numRound}.lua"
 
-      # Execute it from "project-2023-student/project"
-      ../wrk2/wrk http://localhost:8888/ -d$test_duration --latency -R$rate -s ./wrk_scripts/post.lua >> $output_file
-      #../wrk2-DeathStarBench/wrk http://localhost:8888/  -d$test_duration  --latency -R$rate -s ./wrk_scripts/test.lua > $output_file
+      # Générer le nom du fichier de sortie
+      output_file="$results_dir/numRound${numRound}_size${size}_key${key}.csv"
+
+      # Exécuter le script Lua avec wrk
+      ../wrk2-DeathStarBench/wrk http://localhost:8888/ -d$test_duration --latency -R100 -s ./wrk_scripts/$script_file > $output_file
 
       echo "Test completed for rate=${rate}, size=${size}, key=${key}"
 
@@ -31,5 +34,7 @@ for rate in "${request_rates[@]}"; do
   done
 done
 
-# call script python
-python scriptGraph.py
+echo "Performance evaluation completed."
+
+# Appeler le script Python pour générer les graphiques
+# python scriptGraph.py

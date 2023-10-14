@@ -1,5 +1,31 @@
 math.randomseed(os.time())
 
+-- Liste des paramètres à tester
+keySizeOptions = {8, 16}
+fileSizeOptions = {100}
+numRoundsOptions = {1, 5}
+
+-- ...
+
+function writeScriptToFile(keySize, fileSize, numRounds, body)
+    local scriptContent = string.format([[
+wrk.method = "POST"
+wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
+wrk.body = "%d,%d,%d,%s"
+]], keySize, fileSize, numRounds, body)
+
+    local scriptFileName = string.format("script_%d_%d_%d.lua", keySize, fileSize, numRounds)
+    local file = io.open(scriptFileName, "w")
+    if file then
+        file:write(scriptContent)
+        file:close()
+        print("Script written to:", scriptFileName)
+    else
+        print("Error writing script to file:", scriptFileName)
+    end
+end
+
+
 -- Fonction pour générer une chaîne aléatoire de longueur 'length'
 function randomString(length)
     local characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -13,24 +39,23 @@ function randomString(length)
     return str
 end
 
--- Fonction pour générer un corps de requête aléatoire
-function generateRandomBody()
-    local keySizeOptions = {8, 16, 32}
-    local fileSizeOptions = {100, 1000, 10000}
-
-    local keySize = keySizeOptions[math.random(1, #keySizeOptions)]
-    local fileSize = fileSizeOptions[math.random(1, #fileSizeOptions)]
-    local numRounds = math.random(1, 10)
+-- Fonction pour générer un corps de requête avec différentes combinaisons de paramètres
+function generateRandomBody(keySize, fileSize, numRounds)
     local key = randomString(keySize)
     local file = randomString(fileSize)
     local body = string.format("%d,%d,%d,%s%s", keySize, fileSize, numRounds, key, file)
-    print("Generated request body:", body)
-
     return body
 end
 
-wrk.method = "POST"
-wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
+-- Test de toutes les combinaisons possibles
+for _, keySize in ipairs(keySizeOptions) do
+    for _, fileSize in ipairs(fileSizeOptions) do
+        for _, numRounds in ipairs(numRoundsOptions) do
+            -- Appel à la fonction pour générer le corps de requête avec la combinaison actuelle
+            local body = generateRandomBody(keySize, fileSize, numRounds)
 
--- Appel à la fonction pour générer le corps de requête
-wrk.body = generateRandomBody()
+            -- Écrire le script dans un fichier
+            writeScriptToFile(keySize, fileSize, numRounds, body)
+        end
+    end
+end
