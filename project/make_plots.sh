@@ -38,3 +38,4 @@ echo "Performance evaluation completed."
 
 # Appeler le script Python pour générer les graphiques
 # python scriptGraph.py
+python keyScript.py
