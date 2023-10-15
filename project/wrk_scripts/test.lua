@@ -11,8 +11,8 @@ function writeScriptToFile(keySize, fileSize, numRounds, body)
     local scriptContent = string.format([[
 wrk.method = "POST"
 wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
-wrk.body = "%d,%d,%d,%s"
-]], keySize, fileSize, numRounds, body)
+wrk.body = "%s"
+]], body)
 
     local scriptFileName = string.format("script_%d_%d_%d.lua", keySize, fileSize, numRounds)
     local file = io.open(scriptFileName, "w")
