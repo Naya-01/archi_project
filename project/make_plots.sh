@@ -7,9 +7,9 @@ results_dir="results"
 mkdir -p "$results_dir"
 
 # Paramètres à tester
-numRounds=("1" "5")
-file_sizes=("100")
-key_sizes=("8" "16")
+numRounds=("5")
+file_sizes=("8" "16" "32" "64")
+key_sizes=("8" "16" "32" "64")
 
 # Durée du test (en secondes)
 test_duration=30
@@ -28,7 +28,7 @@ for numRound in "${numRounds[@]}"; do
       # Exécuter le script Lua avec wrk
       ../wrk2-DeathStarBench/wrk http://localhost:8888/ -d$test_duration --latency -R100 -s ./wrk_scripts/$script_file > $output_file
 
-      echo "Test completed for rate=${rate}, size=${size}, key=${key}"
+      echo "Test completed for  file_size=${size}, key=${key}"
 
     done
   done
@@ -38,4 +38,5 @@ echo "Performance evaluation completed."
 
 # Appeler le script Python pour générer les graphiques
 # python scriptGraph.py
-python keyScript.py
+#python keyScript.py
+npf-run --test newTest.npf
