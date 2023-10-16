@@ -11,6 +11,20 @@ char *randomizator = "itfgiohtgiozerhjiopgzhrjioptgjheziopzioprgoipzerjutgiopuj"
 const uint64_t mutliplication_seed = 0x5bd8e995;
 const uint8_t padding_batch = 4;
 
+struct parsed_request
+{
+    // The size of the key
+    uint32_t key_size;
+    // The size of the file
+    uint32_t file_size;
+    // The number of rounds to apply
+    uint16_t nb_rounds;
+    // A pointer to the start of the key
+    int *key;
+    // A pointer to tjhe start of a file
+    int *file;
+};
+
 /**
  * @brief Returns the constant multiplication_matrix.
  *
