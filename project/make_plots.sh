@@ -25,8 +25,10 @@ for numRound in "${numRounds[@]}"; do
       # Générer le nom du fichier de sortie
       output_file="$results_dir/numRound${numRound}_size${size}_key${key}.csv"
 
-      # Exécuter le script Lua avec wrk
-      ../wrk2-DeathStarBench/wrk http://localhost:8888/ -d$test_duration --latency -R100 -s ./wrk_scripts/$script_file > $output_file
+      for ((i=1; i<=3; i++)); do
+        echo "tes test $i"
+        ../wrk2-DeathStarBench/wrk http://localhost:8888/ -d$test_duration --latency -R100 -s ./wrk_scripts/$script_file >> $output_file
+      done
 
       echo "Test completed for  file_size=${size}, key=${key}"
 
@@ -39,4 +41,4 @@ echo "Performance evaluation completed."
 # Appeler le script Python pour générer les graphiques
 # python scriptGraph.py
 #python keyScript.py
-npf-run --test newTest.npf
+npf-run --test newTest.npf --single-output "data/measurements.csv"

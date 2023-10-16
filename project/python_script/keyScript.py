@@ -8,13 +8,13 @@ repertoire = 'results'
 fichiers = os.listdir(repertoire)
 
 
+
 def clear_content(content):
     lines = content.split('\n')
     non_empty_lines = [line.strip() for line in lines if line.strip() != '']
     text_without_empty_lines = '\n'.join(non_empty_lines)
 
     return text_without_empty_lines
-
 
 def convert_to_milliseconds(value):
     if "us" in value:
@@ -33,7 +33,6 @@ def write_file(file_name, content):
     except Exception as e:
         print(f"Une erreur s'est produite : {str(e)}")
 
-
 def parse_Latency_Dist(content, key_size):
     lines = content.split('\n')
 
@@ -45,7 +44,7 @@ def parse_Latency_Dist(content, key_size):
         latency = convert_to_milliseconds(latency)
         result.append(latency)
         print(f"key= {key_size} et latency = {latency}")
-
+            
         nom_fichier = './measurements/resultatK{}.txt'.format(key_size)
 
         write_file(nom_fichier, str(latency))
@@ -53,7 +52,21 @@ def parse_Latency_Dist(content, key_size):
     return result
 
 
-keySizeOptions = [8, 16, 32, 64]
+
+def test_test(content, key_size):
+    test_blocks = content.split("Running 5s test @ http://localhost:8888/")
+    test_blocks = test_blocks[1:]
+
+    for test_block in test_blocks:
+        latency_index = test_block.find("Latency Distribution (HdrHistogram - Recorded Latency)")
+
+        latency_block = test_block[latency_index:]
+        parse_Latency_Dist(latency_block, key_size)
+
+
+
+
+keySizeOptions = [8,16,32,64]
 
 for i in keySizeOptions:
     for fichier in fichiers:
@@ -62,8 +75,10 @@ for i in keySizeOptions:
             with open(chemin_complet, 'r') as f:
                 contenu = f.read()
                 contenu = clear_content(contenu)
-                legacy = parse_Latency_Dist(contenu, i)
-                print(f"Contenu du fichier {fichier} :\n{legacy}")
+                test_test(contenu, i)
+                #legacy = parse_Latency_Dist(contenu, i)
+                #print(f"Contenu du fichier {fichier} :\n{legacy}")
+
 
 
 datas = []
@@ -78,13 +93,13 @@ for data in datas:
 
 key = np.array(keySizeOptions)
 
-# example
+#example
 fig = plt.figure()
 plt.plot(key, mean, linewidth=2)
-plt.errorbar(key, mean, color='blue', marker='o')
+plt.errorbar(key, mean, color='blue', marker = 'o')
 plt.xlabel("Size of key")
 plt.ylabel("Latency (ms)")
-plt.title("Latency for each key")
+plt.title("latency for each key")
 
-plt.savefig("./firstK8.PNG")
+plt.savefig("../plots/firstK8.PNG")
 plt.close()
