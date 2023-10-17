@@ -57,11 +57,6 @@ plt.close()
 
 
 
-
-
-
-
-
 result = datas.groupby(['file_size', 'threads'])['LATENCY'].mean().unstack() * 1000
 result.plot(kind='area', stacked=True, figsize=(10, 6))
 plt.xlabel('file size')
@@ -89,6 +84,29 @@ plt.close()
 
 
 
+plt.figure(figsize=(18, 6))
 
+plt.subplot(131)  # Premier sous-graphique
+plt.imshow(plt.imread("../plots/keyplot.PNG"))
+plt.axis('off')
+plt.title('Compare by key Size')
+
+plt.subplot(132)  # Deuxième sous-graphique
+plt.imshow(plt.imread("../plots/fileplot.PNG"))
+plt.axis('off')
+plt.title('Compare by File Size')
+
+plt.subplot(133) 
+plt.imshow(plt.imread("../plots/threadsPlot.PNG"))
+plt.axis('off')
+plt.title('Compare by Threads')
+
+plt.tight_layout()
+
+plt.suptitle('LATENCY comparisons', fontsize=16)
+
+# Affiche le graphique assemblé
+plt.savefig("../plots/compare3.PNG")
+plt.close()
 
 
