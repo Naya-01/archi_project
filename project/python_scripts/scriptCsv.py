@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 
-datas = pd.read_csv("../data/measurements222.csv")
+datas = pd.read_csv("../data/measurements.csv")
 
 mean_latency = datas.groupby('key_size')['LATENCY'].mean() * 1000
 error = datas.groupby('key_size')['LATENCY'].std() * 1000
