@@ -42,4 +42,4 @@ echo "Performance evaluation completed."
 # python scriptGraph.py
 #python keyScript.py
 python "python_scripts/scriptCsv.py"
-#npf-run --test newTest.npf --single-output "data/measurements.csv"
+#npf-run --test test.npf --single-output "data/measurements.csv"
