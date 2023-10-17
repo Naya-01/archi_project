@@ -1,11 +1,17 @@
 %info
-WRK2 KEY_SIZE
+WRK2 tests
+
+%config
+var_unit={RESULT:us}
+var_format={RESULT:%d}
+
 
 %variables
 numRounds={5}
 file_size={8,16,32,64}
 key_size={8,16,32,64}
+threads={2,4,6,8}
 
 %script@client 
-result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/ -d15 --latency -R100 -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
-echo "RESULT-THROUGHPUT $result"
+result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/ -d15  --latency -t ${threads} -R100 -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
+echo "RESULT-LATENCY $result"

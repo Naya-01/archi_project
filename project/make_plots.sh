@@ -2,6 +2,7 @@
 
 echo "Executing performance evaluation for generated Lua scripts..."
 
+lua "./wrk_scripts/test.lua"
 # Créer le répertoire pour les résultats
 # results_dir="results"
 # mkdir -p "$results_dir"
@@ -41,5 +42,7 @@ echo "Performance evaluation completed."
 # Appeler le script Python pour générer les graphiques
 # python scriptGraph.py
 #python keyScript.py
+
+npf-run --test test.npf --single-output "../data/measurements222.csv"
+
 python "python_scripts/scriptCsv.py"
-#npf-run --test test.npf --single-output "data/measurements.csv"

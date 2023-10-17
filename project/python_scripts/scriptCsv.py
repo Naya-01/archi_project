@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 
-datas = pd.read_csv("../data/measurements.csv")
+datas = pd.read_csv("../data/measurements222.csv")
 
 mean_latency = datas.groupby('key_size')['LATENCY'].mean() * 1000
 error = datas.groupby('key_size')['LATENCY'].std() * 1000
@@ -49,7 +49,7 @@ plt.scatter(mean_latency.index, mean_latency.values, color='blue', label='Points
 plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', color='blue', elinewidth=2, capsize=5, label='Barres d\'erreur')
 plt.xlabel('threads')
 plt.ylabel('LATENCY (ms)')
-plt.title('LATENCY in line with File size')  
+plt.title('LATENCY in line with Threads')  
 plt.grid(True)
 plt.savefig("../plots/threadsPlot.PNG")
 plt.close()

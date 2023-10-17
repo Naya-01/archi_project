@@ -1,9 +1,9 @@
 math.randomseed(os.time())
 
 -- Liste des paramètres à tester
-keySizeOptions = {8, 16}
-fileSizeOptions = {100}
-numRoundsOptions = {1, 5}
+keySizeOptions = {8,16,32,64}
+fileSizeOptions = {8,16,32,64}
+numRoundsOptions = {5}
 
 -- ...
 
@@ -14,7 +14,7 @@ wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
 wrk.body = "%s"
 ]], body)
 
-    local scriptFileName = string.format("script_%d_%d_%d.lua", keySize, fileSize, numRounds)
+    local scriptFileName = string.format("./wrk_scripts/script_%d_%d_%d.lua", keySize, fileSize, numRounds)
     local file = io.open(scriptFileName, "w")
     if file then
         file:write(scriptContent)
