@@ -7,7 +7,7 @@ echo "Executing performance evaluation for generated Lua scripts..."
 # echo "Performance evaluation completed."
 
 # # tests
-# npf-run --test test.npf --single-output "../data/measurements.csv"
+# npf-run --test test.npf --single-output "./data/measurements.csv"
 
 # Appeler le script Python pour générer les graphiques
 python "python_scripts/scriptCsv.py"

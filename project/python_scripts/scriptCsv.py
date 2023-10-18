@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 
-datas = pd.read_csv("../data/measurements.csv")
+datas = pd.read_csv("./data/measurements.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
 
 mean_latency = datas.groupby('key_size')['LATENCY'].mean() 
@@ -18,7 +18,7 @@ plt.xlabel('Key size (bytes)')
 plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with Key size')  
 plt.grid(True)
-plt.savefig("../plots/keyplot.PNG")
+plt.savefig("./plots/keyplot.PNG")
 plt.close()
 
 
@@ -35,7 +35,7 @@ plt.xlabel('File size (bytes)')
 plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with File size')  
 plt.grid(True)
-plt.savefig("../plots/fileplot.PNG")
+plt.savefig("./plots/fileplot.PNG")
 plt.close()
 
 
@@ -52,7 +52,7 @@ plt.xlabel('threads')
 plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with Threads')  
 plt.grid(True)
-plt.savefig("../plots/threadsPlot.PNG")
+plt.savefig("./plots/threadsPlot.PNG")
 plt.close()
 
 
@@ -77,7 +77,7 @@ plt.title('Compare by Threads')
 plt.tight_layout()
 
 plt.suptitle('LATENCY comparisons', fontsize=16)
-plt.savefig("../plots/compare3.PNG")
+plt.savefig("./plots/compare3.PNG")
 plt.close()
 
 
@@ -95,7 +95,7 @@ plt.xlabel("File Size (bytes)")
 plt.ylabel("Latency (ms)")
 plt.title("Average Latency vs. File Size for Different Key Sizes")
 plt.grid(True)
-plt.savefig("../plots/latency_vs_filesize.PNG")
+plt.savefig("./plots/latency_vs_filesize.PNG")
 plt.close()
 
 
@@ -113,7 +113,7 @@ plt.title("Latency vs. Key Size for Different File Sizes")
 
 # Grille
 plt.grid(True)
-plt.savefig("../plots/latency_vs_keysize.PNG")
+plt.savefig("./plots/latency_vs_keysize.PNG")
 plt.close()
 
 
@@ -131,7 +131,7 @@ plt.xlabel("Key Size (bytes)")
 plt.ylabel("Latency (ms)")
 plt.title("Average Latency vs. Key Size for Different Number of Threads")
 plt.grid(True)
-plt.savefig("../plots/latency_vs_keysize_threads.PNG")
+plt.savefig("./plots/latency_vs_keysize_threads.PNG")
 plt.close()
 
 
@@ -146,5 +146,5 @@ plt.xlabel("File Size (bytes)")
 plt.ylabel("Latency (ms)")
 plt.title("Average Latency vs. File Size for Different Number of Threads")
 plt.grid(True)
-plt.savefig("../plots/latency_vs_filesize_threads.PNG")
+plt.savefig("./plots/latency_vs_filesize_threads.PNG")
 plt.close()
