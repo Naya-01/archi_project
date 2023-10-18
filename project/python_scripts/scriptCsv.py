@@ -60,17 +60,17 @@ plt.close()
 plt.figure(figsize=(18, 6))
 
 plt.subplot(131)  # Premier sous-graphique
-plt.imshow(plt.imread("../plots/keyplot.PNG"))
+plt.imshow(plt.imread("./plots/keyplot.PNG"))
 plt.axis('off')
 plt.title('Compare by key Size')
 
 plt.subplot(132)  # Deuxième sous-graphique
-plt.imshow(plt.imread("../plots/fileplot.PNG"))
+plt.imshow(plt.imread("./plots/fileplot.PNG"))
 plt.axis('off')
 plt.title('Compare by File Size')
 
 plt.subplot(133) 
-plt.imshow(plt.imread("../plots/threadsPlot.PNG"))
+plt.imshow(plt.imread("./plots/threadsPlot.PNG"))
 plt.axis('off')
 plt.title('Compare by Threads')
 
