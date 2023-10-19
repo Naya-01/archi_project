@@ -3,7 +3,7 @@ math.randomseed(os.time())
 -- Liste des paramètres à tester
 keySizeOptions = {8,16,32,64}
 fileSizeOptions = {8,16,32,64}
-numRoundsOptions = {5}
+numRoundsOptions = {1,10,100}
 
 -- ...
 
