@@ -248,3 +248,16 @@ for debits, group_data in grouped_debits:
     plt.grid(True)
     plt.savefig(f"./plots/request_vs_filesize_threads_debits_{debits}.PNG")
     plt.close()
+
+plt.figure(figsize=(10, 6))
+
+for debits, group_data in grouped_debits:
+    plt.scatter(group_data['REQ'], group_data['LATENCY'], label=f"Debits: {debits}", marker='o')
+
+plt.legend()
+plt.xlabel("Request Count")
+plt.ylabel("Latency (ms)")
+plt.title("Latency vs. Request Count for Different Debits")
+plt.grid(True)
+plt.savefig("./plots/latency_vs_request_count_debits.PNG")
+plt.show()
