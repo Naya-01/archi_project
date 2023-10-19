@@ -11,13 +11,15 @@ numRounds={5}
 file_size={8,16,32,64}
 key_size={8,16,32,64}
 threads={2,4,6,8}
+debits={100,200,500}
 
 %script@client 
-result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/ -d15  --latency -t ${threads} -R100 -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
+
+result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/ -d15  --latency -t ${threads} -R${debits} -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
 latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
 req=$(echo "$result" | grep "Req/Sec" | awk '{print $2 " " $3}')
+transfer=$(echo "$result" | grep "Transfer/sec" )
 
 echo "RESULT-LATENCY $latency"
 echo "RESULT-REQ $req"
-
-
+echo "RESULT-TRANSFER $transfer"
