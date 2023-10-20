@@ -6,19 +6,23 @@ import os
 datas = pd.read_csv("./data/results.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
 datas['REQ'] = datas['REQ'] * 1000
+
+markers = ['o', 's', '^', 'D', '*']
+colors = ['blue', 'green', 'purple', 'orange', 'red']
+
 # Regrouper les données par 'debits'
-grouped = datas.groupby('debits')
+grouped = datas.groupby('numRounds')
 
 # Latency/keysize
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('key_size')['LATENCY'].mean()
     error = group_data.groupby('key_size')['LATENCY'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Debits: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('Key size (bytes)')
 plt.ylabel('LATENCY (ms)')
@@ -31,13 +35,13 @@ plt.close()
 # Request/keysize
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('key_size')['REQ'].mean()
     error = group_data.groupby('key_size')['REQ'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Debits: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('Key size (bytes)')
 plt.ylabel('REQUEST (ms)')
@@ -50,13 +54,13 @@ plt.close()
 # Latency/FileSize
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('file_size')['LATENCY'].mean()
     error = group_data.groupby('file_size')['LATENCY'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Debits: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('File size (bytes)')
 plt.ylabel('LATENCY (ms)')
@@ -69,13 +73,13 @@ plt.close()
 # Request/FileSize
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('file_size')['REQ'].mean()
     error = group_data.groupby('file_size')['REQ'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Debits: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('File size (bytes)')
 plt.ylabel('Req (ms)')
@@ -88,13 +92,13 @@ plt.close()
 # Latency/Threads
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('threads')['LATENCY'].mean()
     error = group_data.groupby('threads')['LATENCY'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Débit moyen: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('File size (bytes)')
 plt.ylabel('LATENCY (ms)')
@@ -107,13 +111,13 @@ plt.close()
 # Request/Threads
 plt.figure(figsize=(10, 6))
 
-for debits, group_data in grouped:
+for (index, (debits, group_data)) in enumerate(grouped):
     mean_latency = group_data.groupby('threads')['REQ'].mean()
     error = group_data.groupby('threads')['REQ'].std()
 
-    mean_latency.plot(kind='line', label=f'Debits: {debits}')
-    plt.scatter(mean_latency.index, mean_latency.values)
-    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt='o', elinewidth=2, capsize=5)
+    mean_latency.plot(kind='line', label=f'Debits: {debits}', color=colors[index], linewidth=2)
+    plt.scatter(mean_latency.index, mean_latency.values, marker=markers[index], color=colors[index], s=50)
+    plt.errorbar(mean_latency.index, mean_latency.values, yerr=error.values, fmt=markers[index], elinewidth=2, capsize=5, color=colors[index])
 
 plt.xlabel('File size (bytes)')
 plt.ylabel('REQ (ms)')
@@ -260,4 +264,29 @@ plt.ylabel("Latency (ms)")
 plt.title("Latency vs. Request Count for Different Debits")
 plt.grid(True)
 plt.savefig("./plots/latency_vs_request_count_debits.PNG")
-plt.show()
+plt.close()
+
+
+# Effect of nbRounds
+grouped = datas.groupby('numRounds')['LATENCY'].mean()
+plt.figure(figsize=(10, 6))
+grouped.plot(kind='bar', color='lightcoral')
+plt.title('Latency vs NumRounds')
+plt.xlabel('NumRounds')
+plt.ylabel('Average Latency (ms)')
+plt.grid(axis='y')
+plt.tight_layout()
+plt.savefig("./plots/Latency_NumRounds_Average_bar.PNG")
+plt.close()
+
+
+
+grouped_data = datas.groupby('numRounds')['LATENCY'].mean()
+plt.figure(figsize=(10, 6))
+plt.plot(grouped_data.index, grouped_data.values, marker='o', linestyle='-', color='b')
+plt.title('Impact of NbRounds on Latency')
+plt.xlabel('NbRounds')
+plt.ylabel('Average Latency (ms)')
+plt.grid(True, which="both", ls="--", c='0.7')
+plt.savefig("./plots/Latency_NumRounds_Average_line.PNG")
+plt.close()

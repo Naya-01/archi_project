@@ -14,9 +14,7 @@ npf-run --test test.npf --single-output "./data/results.csv"
 # Appeler le script Python pour générer les graphiques
 python "python_scripts/scriptCsv.py"
 
-sleep 10
 
-echo "AHAZGAJKHGJHAGJ"
 
 # PID=$(lsof -t -i :8888)
 # if [ ! -z "$PID" ]; then
