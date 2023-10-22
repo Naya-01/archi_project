@@ -271,7 +271,7 @@ plt.close()
 
 
 # Effect of nbRounds
-grouped = datas.groupby('numRounds')['LATENCY'].mean()
+grouped = datas.groupby('numRounds')['LATENCY'].mean() 
 plt.figure(figsize=(10, 6))
 grouped.plot(kind='bar', color='lightcoral')
 plt.title('Latency vs NumRounds')
