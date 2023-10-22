@@ -7,6 +7,9 @@ datas = pd.read_csv("./data/results.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
 datas['REQ'] = datas['REQ'] * 1000
 
+plots_path = "./plots"
+file_extension = "pdf"
+
 markers = ['o', 's', '^', 'D', '*']
 colors = ['blue', 'green', 'purple', 'orange', 'red']
 
@@ -29,7 +32,7 @@ plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/keyplot_all_debits_latency.PNG")
+plt.savefig(f"{plots_path}/keyplot_all_debits_latency.{file_extension}")
 plt.close()
 
 # Request/keysize
@@ -48,7 +51,7 @@ plt.ylabel('REQUEST (ms)')
 plt.title('REQUEST in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/keyplot_all_debits_requests.PNG")
+plt.savefig(f"{plots_path}/keyplot_all_debits_requests.{file_extension}")
 plt.close()
 
 # Latency/FileSize
@@ -67,7 +70,7 @@ plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/fileplot_all_debits_latency.PNG")
+plt.savefig(f"{plots_path}/fileplot_all_debits_latency.{file_extension}")
 plt.close()
 
 # Request/FileSize
@@ -86,7 +89,7 @@ plt.ylabel('Req (ms)')
 plt.title('Req in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/fileplot_all_debits_request.PNG")
+plt.savefig(f"{plots_path}/fileplot_all_debits_request.{file_extension}")
 plt.close()
 
 # Latency/Threads
@@ -105,7 +108,7 @@ plt.ylabel('LATENCY (ms)')
 plt.title('LATENCY in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/threadsplot_all_debits_latency.PNG")
+plt.savefig(f"{plots_path}/threadsplot_all_debits_latency.{file_extension}")
 plt.close()
 
 # Request/Threads
@@ -124,7 +127,7 @@ plt.ylabel('REQ (ms)')
 plt.title('REQ in line with Key size for Different Debits')
 plt.grid(True)
 plt.legend()
-plt.savefig("./plots/threadsplot_all_debits_request.PNG")
+plt.savefig(f"{plots_path}/threadsplot_all_debits_request.{file_extension}")
 plt.close()
 
 #file vs key / Latency
@@ -146,7 +149,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average Latency (ms)")
     plt.title(f"Average Latency vs. File Size for Different Key Sizes (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/latency_vs_filesize_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/latency_vs_filesize_debits_{debits}.{file_extension}")
     plt.close()
 
 #file vs key / REQ
@@ -166,7 +169,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average REQ (ms)")
     plt.title(f"Average REQ vs. File Size for Different Key Sizes (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/req_latency_vs_filesize_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/req_latency_vs_filesize_debits_{debits}.{file_extension}")
     plt.close()
 
 
@@ -182,7 +185,7 @@ plt.title("Latency vs. Key Size for Different File Sizes")
 
 # Grille
 plt.grid(True)
-plt.savefig("./plots/latency_vs_keysize.PNG")
+plt.savefig(f"{plots_path}/latency_vs_keysize.{file_extension}")
 plt.close()
 
 for debits, group_data in grouped_debits:
@@ -199,7 +202,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average Latency (ms)")
     plt.title(f"Average Latency vs. Key Size for Different Number of Threads (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/latency_vs_keysize_threads_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/latency_vs_keysize_threads_debits_{debits}.{file_extension}")
     plt.close()
 
 for debits, group_data in grouped_debits:
@@ -216,7 +219,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average Request (ms)")
     plt.title(f"Average Request vs. Key Size for Different Number of Threads (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/request_vs_keysize_threads_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/request_vs_keysize_threads_debits_{debits}.{file_extension}")
     plt.close()
 
 for debits, group_data in grouped_debits:
@@ -233,7 +236,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average Latency (ms)")
     plt.title(f"Average Latency vs. File Size for Different Number of Threads (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/latency_vs_filesize_threads_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/latency_vs_filesize_threads_debits_{debits}.{file_extension}")
     plt.close()
 
 for debits, group_data in grouped_debits:
@@ -250,7 +253,7 @@ for debits, group_data in grouped_debits:
     plt.ylabel("Average Request (ms)")
     plt.title(f"Average Request vs. File Size for Different Number of Threads (Debits: {debits})")
     plt.grid(True)
-    plt.savefig(f"./plots/request_vs_filesize_threads_debits_{debits}.PNG")
+    plt.savefig(f"{plots_path}/request_vs_filesize_threads_debits_{debits}.{file_extension}")
     plt.close()
 
 plt.figure(figsize=(10, 6))
@@ -263,7 +266,7 @@ plt.xlabel("Request Count")
 plt.ylabel("Latency (ms)")
 plt.title("Latency vs. Request Count for Different Debits")
 plt.grid(True)
-plt.savefig("./plots/latency_vs_request_count_debits.PNG")
+plt.savefig(f"{plots_path}/latency_vs_request_count_debits.{file_extension}")
 plt.close()
 
 
@@ -276,7 +279,7 @@ plt.xlabel('NumRounds')
 plt.ylabel('Average Latency (ms)')
 plt.grid(axis='y')
 plt.tight_layout()
-plt.savefig("./plots/Latency_NumRounds_Average_bar.PNG")
+plt.savefig(f"{plots_path}/Latency_NumRounds_Average_bar.{file_extension}")
 plt.close()
 
 
@@ -288,5 +291,5 @@ plt.title('Impact of NbRounds on Latency')
 plt.xlabel('NbRounds')
 plt.ylabel('Average Latency (ms)')
 plt.grid(True, which="both", ls="--", c='0.7')
-plt.savefig("./plots/Latency_NumRounds_Average_line.PNG")
+plt.savefig(f"{plots_path}/Latency_NumRounds_Average_line.{file_extension}")
 plt.close()
