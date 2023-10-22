@@ -5,7 +5,7 @@ import os
 
 datas = pd.read_csv("./data/results.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
-datas['REQ'] = datas['REQ'] * 1000
+datas['REQ'] = datas['REQ']
 
 plots_path = "./plots"
 file_extension = "pdf"
