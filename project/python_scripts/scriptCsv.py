@@ -293,3 +293,51 @@ plt.ylabel('Average Latency (ms)')
 plt.grid(True, which="both", ls="--", c='0.7')
 plt.savefig(f"{plots_path}/Latency_NumRounds_Average_line.{file_extension}")
 plt.close()
+
+grouped = datas.groupby(['threads', 'debits'])['LATENCY'].mean().unstack()
+colors = ['b', 'g', 'r', 'c', 'm', 'y']
+plt.figure(figsize=(10, 6))
+debits = grouped.columns
+width = 0.3
+x = grouped.index
+bottom_values = np.zeros(len(x))
+fig, ax = plt.subplots()
+for i, debit in enumerate(debits):
+    latencies = grouped[debit]
+    plt.bar(x + i * width, latencies, width, label=f"Debit: {debit}", color=colors[i])
+plt.xlabel("Thread")
+plt.ylabel("Average Latency (ms)")
+plt.title("Average Latency vs. Thread for Different Debits")
+plt.legend()
+plt.grid(True)
+plt.xticks(x + width * len(debits) / 2, x)
+plt.savefig(f"{plots_path}/latency_vs_thread_debits.{file_extension}")
+plt.close()
+
+for debits, group_data in grouped_debits:
+    plt.figure(figsize=(10, 6))
+    grouped = group_data.groupby(['file_size', 'key_size'])['TRANSFER'].mean().reset_index()
+    for key_size in grouped['key_size'].unique():
+        subset = grouped[grouped['key_size'] == key_size]
+        plt.plot(subset['file_size'], subset['TRANSFER'], label=f"Key Size: {key_size}", marker='o')
+    plt.legend()
+    plt.xlabel("File Size (bytes)")
+    plt.ylabel("Average Transfer/sec (ms)")
+    plt.title(f"Average Transfer/sec vs. File Size for Different Key Sizes (Debits: {debits})")
+    plt.grid(True)
+    plt.savefig(f"{plots_path}/transfer_vs_filesize_debits_{debits}.{file_extension}")
+    plt.close()
+
+for debits, group_data in grouped_debits:
+    plt.figure(figsize=(10, 6))
+    grouped = group_data.groupby(['key_size', 'threads'])['TRANSFER'].mean().reset_index()
+    for thread in grouped['threads'].unique():
+        subset = grouped[grouped['threads'] == thread]
+        plt.plot(subset['key_size'], subset['TRANSFER'], label=f"Threads: {thread}", marker='o')
+    plt.legend()
+    plt.xlabel("Key Size (bytes)")
+    plt.ylabel("Average Transfer/sec")
+    plt.title(f"Average transfer/sec vs. Key Size for Different Number of Threads (Debits: {debits})")
+    plt.grid(True)
+    plt.savefig(f"{plots_path}/transfer_vs_keysize_threads_debits_{debits}.{file_extension}")
+    plt.close()
