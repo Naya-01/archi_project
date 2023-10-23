@@ -35,19 +35,6 @@ def plot_data(grouped_data_param, x_column, y_column, ylabel, title, file_name):
     plt.close()
 
 
-# Latency/keysize
-plot_data('debits', 'key_size', 'LATENCY', 'Latency (ms)', 'Latency in line with Key size for Different Debits', 'keyplot_all_debits_latency')
-# Request/keysize
-plot_data('debits', 'key_size', 'REQ', 'Request', 'Request in line with Key size for Different Debits', 'keyplot_all_debits_request')
-# Latency/FileSize
-plot_data('debits', 'file_size', 'LATENCY', 'Latency (ms)', 'Latency in line with File size for Different Debits', 'fileplot_all_debits_latency')
-# Request/FileSize
-plot_data('debits', 'file_size', 'REQ', 'Request', 'Request in line with File size for Different Debits', 'fileplot_all_debits_request')
-# Latency/Threads
-plot_data('debits', 'threads', 'LATENCY', 'Latency (ms)', 'Latency in line with Threads for Different Debits', 'threadsplot_all_debits_latency')
-# Request/Threads
-plot_data('debits', 'threads', 'REQ', 'Request', 'Request in line with Threads for Different Debits', 'threadsplot_all_debits_request')
-
 def generate_plot(datas, x_col, y_col, secondary_col, y_label, file_prefix, title_prefix):
 
     for debits, group_data in grouped_debits:
@@ -68,45 +55,13 @@ def generate_plot(datas, x_col, y_col, secondary_col, y_label, file_prefix, titl
 
 # file vs key / Latency
 generate_plot(datas, 'file_size', 'LATENCY', 'key_size', 'Average Latency (ms)', 'latency_vs_filesize', 'Average Latency')
-# file vs key / REQ
-generate_plot(datas, 'file_size', 'REQ', 'key_size', 'Average REQ', 'req_latency_vs_filesize', 'Average REQ')
 # key vs threads / LATENCY
 generate_plot(datas, 'key_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_keysize_threads', 'Average Latency')
-# key vs threads / REQ
-generate_plot(datas, 'key_size', 'REQ', 'threads', 'Average Request', 'request_vs_keysize_threads', 'Average Request')
 # file vs threads / LATENCY
 generate_plot(datas, 'file_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_filesize_threads', 'Average Latency')
 # file vs threads / REQ
-generate_plot(datas, 'file_size', 'REQ', 'threads', 'Average Request', 'request_vs_filesize_threads', 'Average Request')
-# file vs key / TRANSFER
-generate_plot(datas, 'file_size', 'TRANSFER', 'key_size', 'Average Transfer/sec', 'transfer_vs_filesize', 'Average Transfer/sec')
-# key vs threads / TRANSFER
-generate_plot(datas, 'key_size', 'TRANSFER', 'threads', 'Average Transfer/sec', 'transfer_vs_keysize_threads', 'Average transfer/sec')
+generate_plot(datas, 'file_size', 'REQ', 'threads', 'Average Request/Sec', 'request_vs_filesize_threads', 'Average Request')
 
-
-grouped = datas.groupby(['key_size', 'file_size']).LATENCY.mean().reset_index()
-for size in grouped['file_size'].unique():
-    subset = grouped[grouped['file_size'] == size]
-    plt.plot(subset['key_size'], subset['LATENCY'], label=f"File Size: {size} bytes", marker='o')
-plt.legend()
-plt.xlabel("Key Size (bits)")
-plt.ylabel("Latency (ms)")
-plt.title("Latency vs. Key Size for Different File Sizes")
-plt.grid(True)
-plt.savefig(f"{plots_path}/latency_vs_keysize.{file_extension}")
-plt.close()
-
-
-plt.figure(figsize=(10, 6))
-for debits, group_data in grouped_debits:
-    plt.scatter(group_data['REQ'], group_data['LATENCY'], label=f"Debits: {debits}", marker='o')
-plt.legend()
-plt.xlabel("Request Count")
-plt.ylabel("Latency (ms)")
-plt.title("Latency vs. Request Count for Different Debits")
-plt.grid(True)
-plt.savefig(f"{plots_path}/latency_vs_request_count_debits.{file_extension}")
-plt.close()
 
 grouped = datas.groupby(['threads', 'debits'])['LATENCY'].mean().unstack()
 colors = ['b', 'g', 'r', 'c', 'm', 'y']
@@ -140,13 +95,4 @@ plt.tight_layout()
 plt.savefig(f"{plots_path}/Latency_NumRounds_Average_bar.{file_extension}")
 plt.close()
 
-grouped_data = datas.groupby('numRounds')['LATENCY'].mean()
-plt.figure(figsize=(10, 6))
-plt.plot(grouped_data.index, grouped_data.values, marker='o', linestyle='-', color='b')
-plt.title('Impact of NbRounds on Latency')
-plt.xlabel('NbRounds')
-plt.ylabel('Average Latency (ms)')
-plt.grid(True, which="both", ls="--", c='0.7')
-plt.savefig(f"{plots_path}/Latency_NumRounds_Average_line.{file_extension}")
-plt.close()
 

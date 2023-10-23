@@ -1,0 +1,3 @@
+wrk.method = "POST"
+wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
+wrk.body = "32,256,1,6PFebG1dsytzAMEVmfW2IgO7AOe7l7BhMHCoN4H5t0vuDzFqUbjd7xb8B65n37LGEOuRI2N1s8lwyrdJICnGzFE1B9f46qAA4uSCmg4VfgIUNldWnHcdMgVNf0HcgHdb2vefSZ1x59HJllfPt7s5eDIA4QcaY52QrWw9vnxrm50OhVdQTLLxPUxJkPk8LcP2yC2kpqRSlIgJe9ZxLlla5YkgoKf0nvtcxmCcSUv4dRD7RdvcEW39vegaoBQSwAujmxC4IxzlE2iWWUyaqsabM6217IJuJ4Tv"
