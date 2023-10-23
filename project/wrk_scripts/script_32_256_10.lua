@@ -1,3 +1,0 @@
-wrk.method = "POST"
-wrk.headers["Content-Type"] = "application/x-www-form-urlencoded"
-wrk.body = "32,256,10,sVp0JfcOYBkuVYKBGldThWKffUPoOjZ65FxEkPS8R2smR3oYeIrCe1h9LxnaWCXRIKVsaoqrgZUxS8LxH3zlvXl6KPXgRuxZ5JIVxzDUOXHhWTUeNKF8hr5r6SOOCCo8LwT9lXT0ubXHvsl83r6bY1IVKXjNZNLkAekm13cmU0uFjWEcDA3c1CyBZXOzlaal5ANx3qZOgKUFgYikZcDQe1S4Ohtz8Jb3JpqDVFS1Qm7wBfXa7arcRAXfiGVgQxZacFexLwobZmOaIl1GBiiTj5zHCKnT7Dta"
