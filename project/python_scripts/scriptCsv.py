@@ -35,7 +35,7 @@ def plot_data(grouped_data_param, x_column, y_column, ylabel, title, file_name):
     plt.close()
 
 
-def generate_plot(datas, x_col, y_col, secondary_col, y_label, file_prefix, title_prefix):
+def generate_plot(x_col, y_col, secondary_col, y_label, file_prefix, title_prefix):
 
     for debits, group_data in grouped_debits:
         plt.figure(figsize=(10, 6))
@@ -48,20 +48,21 @@ def generate_plot(datas, x_col, y_col, secondary_col, y_label, file_prefix, titl
         plt.legend()
         plt.xlabel(f"{x_col.capitalize().replace('_', ' ')} (bytes)")
         plt.ylabel(f"{y_label}")
-        plt.title(f"{title_prefix} vs. {x_col.capitalize().replace('_', ' ')} for Different {secondary_col.capitalize()}s (Debits: {debits})")
+        plt.title(f"{title_prefix} vs. {x_col.capitalize().replace('_', ' ')} for Different {secondary_col.capitalize()} (Debits: {debits})")
         plt.grid(True)
         plt.savefig(f"{plots_path}/{file_prefix}_debits_{debits}.{file_extension}")
         plt.close()
 
 # file vs key / Latency
-generate_plot(datas, 'file_size', 'LATENCY', 'key_size', 'Average Latency (ms)', 'latency_vs_filesize', 'Average Latency')
+generate_plot('file_size', 'LATENCY', 'key_size', 'Average Latency (ms)', 'latency_vs_filesize', 'Average Latency')
 # key vs threads / LATENCY
-generate_plot(datas, 'key_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_keysize_threads', 'Average Latency')
+generate_plot('key_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_keysize_threads', 'Average Latency')
 # file vs threads / LATENCY
-generate_plot(datas, 'file_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_filesize_threads', 'Average Latency')
+generate_plot('file_size', 'LATENCY', 'threads', 'Average Latency (ms)', 'latency_vs_filesize_threads', 'Average Latency')
 # file vs threads / REQ
-generate_plot(datas, 'file_size', 'REQ', 'threads', 'Average Request/Sec', 'request_vs_filesize_threads', 'Average Request')
-
+generate_plot('file_size', 'REQ', 'threads', 'Average Request/Sec', 'request_vs_filesize_threads', 'Average Request')
+# file vs key / REQ
+generate_plot('file_size', 'REQ', 'key_size', 'Average REQ', 'req_latency_vs_filesize', 'Average REQ')
 
 grouped = datas.groupby(['threads', 'debits'])['LATENCY'].mean().unstack()
 colors = ['b', 'g', 'r', 'c', 'm', 'y']
