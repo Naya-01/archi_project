@@ -1,4 +1,7 @@
 #!/bin/bash
+pip install --user --upgrade npf
+
+python3 -m pip install --user --upgrade npf
 
 make -C "./server_implementation" run_inginious &
 
@@ -12,7 +15,7 @@ lua "./wrk_scripts/test.lua"
 npf-run --test test.npf --single-output "./data/results.csv"
 
 # Appeler le script Python pour générer les graphiques
-python "python_scripts/scriptCsv.py"
+python3 "python_scripts/scriptCsv.py"
 
 sleep 10
 
