@@ -209,8 +209,40 @@ static char *body_processing(ngx_link_func_ctx_t *ctx, char *body,
     return encrypted_file.file;
 }
 
-void main_function(ngx_link_func_ctx_t *ctx)
-{
+
+/**
+ * @brief Optimized version of boyd_processing.
+ *
+ * Process the request's body, and return a response. This is the
+ * function you should implement.
+ *
+ * @param ctx The context of the request, only used for logging and memory
+ * allocation.
+ * @param body The request's body, as a string.
+ * @param body_len The length of the request's body.
+ * @param resp_len The length of the response.
+ *
+ * @note You will do the required operations based on the request's body, and
+ * return a response. BE CAREFUL, you MUST store the length of your response in
+ * `resp_len` before returning.
+ *
+ * @note Also, this environment keeps you from doing classical `malloc` to
+ * allocate memory. Instead, use the function `ngx_link_func_palloc(ctx,
+ * number_of_bytes)`. The advantage of this method is that your memory
+ * allocation is linked to the request and everything is freed when the resquest
+ * finished. No need to worry about freeing memory :)
+ */
+static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
+                                       size_t body_len, size_t *resp_len) {
+  /**
+   * TODO: Replace the example code below with your own code.
+   */
+  *resp_len = body_len;
+  return body;
+}
+
+
+void main_function(ngx_link_func_ctx_t *ctx) {
 
   // Retrieve request's body
   char *body = (char *)ctx->req_body;
@@ -218,7 +250,34 @@ void main_function(ngx_link_func_ctx_t *ctx)
 
   // Process the request's body
   size_t resp_len = 0;
-  char *resp = body_processing(ctx, body, body_len, &resp_len);
+  char *resp;
+
+  char *optimized = (char *)ngx_link_func_get_query_param(ctx, "optimized");
+  if (optimized == 0x0) {
+    ngx_link_func_write_resp(
+        ctx, 400, "400 Bad Request", "text/plain",
+        "No parameters were given. Ensure that your request looks like : "
+        "http://localhost:8899?optimized=X, where X is either 1 or 0.\n",
+        sizeof(
+            "No parameters were given. Ensure that your request looks like : "
+            "http://localhost:8899?optimized=X, where X is either 1 or 0.\n") -
+            1);
+    return;
+  } else if (*optimized == '1' && strlen(optimized) == 1) {
+    resp = body_processing_optimized(ctx, body, body_len, &resp_len);
+  } else if (*optimized == '0' && strlen(optimized) == 1) {
+    resp = body_processing(ctx, body, body_len, &resp_len);
+  } else {
+    ngx_link_func_write_resp(
+        ctx, 400, "400 Bad Request", "text/plain",
+        "Unknown parameter, your parameter is set to %s, but it should be "
+        "either 1 or 0.\n",
+        sizeof("Unknown parameter, your parameter is set to %s, but it should "
+               "be either 1 or 0.\n") -
+            1);
+    return;
+  }
+
   // Warn user in case of error during processing
   if (resp == NULL) {
     ngx_link_func_write_resp(ctx, 500, "500 Internal Server Error",
@@ -259,3 +318,4 @@ void ngx_link_func_exit_cycle(ngx_link_func_cycle_t *cyc) {
 
   is_service_on = 0;
 }
+
