@@ -3,7 +3,7 @@ build:
 	gcc -shared -ggdb -o libmain.so main.o -lm
 clean:
 	rm -f *.o *.so
-run: build
+run:
 	echo "Application is running..."
 	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/project.conf -g "daemon off;"
 run_debug: build
