@@ -142,7 +142,8 @@ void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
       uint32_t i_j = i * j;
 
       uint32_t k = 0;
-      for (; k < key_size/4*4; k += 4)
+
+      for (; k + 3 < key_size; k += 4)
       {
         key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3];
         key[k] ^= i_j;
@@ -152,10 +153,10 @@ void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
       }
 
       for (; k < key_size; k++)
-        {
-            key_sum += key[k];
-            key[k] ^= i_j;
-        }
+      {
+        key_sum += key[k];
+        key[k] ^= i_j;
+      }
 
       character ^= key_sum;
       file[index] = character;
