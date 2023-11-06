@@ -103,6 +103,28 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
  */
 void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
+
+  #ifdef UNROLL
+  for (uint32_t i = 0; i < K; i++) {
+    for (uint32_t j = 0; j < K; j++) {
+      result[i * K + j] = 0;
+    }
+  }
+
+  for (uint32_t i = 0; i < K; i++) {
+    for (uint32_t j = 0; j < K; j++) {
+      int sum = 0;  
+      for (uint32_t k = 0; k < K; k += 4) {
+        sum += matrix1[i * K + k] * matrix2[k * K + j];
+        sum += matrix1[i * K + (k+1)] * matrix2[(k+1) * K + j];
+        sum += matrix1[i * K + (k+2)] * matrix2[(k+2) * K + j];
+        sum += matrix1[i * K + (k+3)] * matrix2[(k+3) * K + j];
+      }
+      result[i * K + j] = sum;
+
+    }
+  }
+  #else
   for (uint32_t i = 0; i < K; i++)
   {
     for (uint32_t j = 0; j < K; j++)
@@ -114,6 +136,7 @@ void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
       }
     }
   }
+  #endif
 }
 
 /**
