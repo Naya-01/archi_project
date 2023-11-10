@@ -22,10 +22,12 @@ const uint8_t padding_batch = 4;
  *
  * @note You should use this function only once, and store its result.
  */
-int *get_multiplication_matrix(ngx_link_func_ctx_t *ctx, uint32_t K) {
+int *get_multiplication_matrix(ngx_link_func_ctx_t *ctx, uint32_t K)
+{
   uint32_t pos = 0;
   int *multiplication_matrix = ngx_link_func_palloc(ctx, K * K * sizeof(int));
-  for (size_t i = 0; i < K * K; i++) {
+  for (size_t i = 0; i < K * K; i++)
+  {
     multiplication_matrix[i] = *(int *)(randomizator + pos * sizeof(int));
     pos = (pos + 1) % ((strlen(randomizator) / sizeof(int)) - 1);
   }
@@ -34,16 +36,16 @@ int *get_multiplication_matrix(ngx_link_func_ctx_t *ctx, uint32_t K) {
 
 struct parsed_request
 {
-    // The size of the key
-    uint32_t key_size;
-    // The size of the file
-    uint32_t file_size;
-    // The number of rounds to apply
-    uint16_t nb_rounds;
-    // A pointer to the start of the key
-    int *key;
-    // A pointer to tjhe start of a file
-    int *file;
+  // The size of the key
+  uint32_t key_size;
+  // The size of the file
+  uint32_t file_size;
+  // The number of rounds to apply
+  uint16_t nb_rounds;
+  // A pointer to the start of the key
+  int *key;
+  // A pointer to tjhe start of a file
+  int *file;
 };
 
 /**
@@ -57,36 +59,63 @@ struct parsed_request
  */
 void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_request *request)
 {
-    const char *comma = strchr(raw_request, ',');
+  const char *comma = strchr(raw_request, ',');
 
-    if (comma == NULL)
+  if (comma == NULL)
+  {
+    return;
+  }
+
+  request->key_size = atoi(raw_request);
+  const char *key_start = comma + 1;
+  comma = strchr(key_start, ',');
+
+  if (comma == NULL)
+  {
+    return;
+  }
+
+  request->file_size = atoi(key_start);
+  comma++;
+  request->nb_rounds = atoi(comma);
+  const char *key_end = strchr(comma, ',');
+
+  if (key_end == NULL)
+  {
+    return;
+  }
+  key_end++;
+
+  request->key = (int *)key_end;
+  const char *file_start = key_end + request->key_size;
+  request->file = (int *)file_start;
+}
+
+void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t K)
+{
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
     {
-        return;
+      result[i * K + j] = 0;
     }
+  }
 
-    request->key_size = atoi(raw_request);
-    const char *key_start = comma + 1;
-    comma = strchr(key_start, ',');
-
-    if (comma == NULL)
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
     {
-        return;
+      int sum = 0;
+      for (uint32_t k = 0; k < K; k += 4)
+      {
+        sum += matrix1[i * K + k] * matrix2[k * K + j];
+        sum += matrix1[i * K + (k + 1)] * matrix2[(k + 1) * K + j];
+        sum += matrix1[i * K + (k + 2)] * matrix2[(k + 2) * K + j];
+        sum += matrix1[i * K + (k + 3)] * matrix2[(k + 3) * K + j];
+      }
+      result[i * K + j] = sum;
     }
-
-    request->file_size = atoi(key_start);
-    comma++;
-    request->nb_rounds = atoi(comma);
-    const char *key_end = strchr(comma, ',');
-
-    if (key_end == NULL)
-    {
-        return;
-    }
-    key_end++;
-
-    request->key = (int *)key_end;
-    const char *file_start = key_end + request->key_size;
-    request->file = (int *)file_start;
+  }
 }
 
 /**
@@ -101,17 +130,51 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
  */
 void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
-    for (uint32_t i = 0; i < K; i++)
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
     {
-        for (uint32_t j = 0; j < K; j++)
-        {
-            result[i * K + j] = 0;
-            for (uint32_t k = 0; k < K; k++)
-            {
-                result[i * K + j] += matrix1[i * K + k] * matrix2[k * K + j];
-            }
-        }
+      result[i * K + j] = 0;
+      for (uint32_t k = 0; k < K; k++)
+      {
+        result[i * K + j] += matrix1[i * K + k] * matrix2[k * K + j];
+      }
     }
+  }
+}
+
+void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
+{
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
+    {
+      uint32_t index = i * K + j;
+      int character = file[index];
+      int key_sum = 0;
+      uint32_t i_j = i * j;
+
+      uint32_t k = 0;
+
+      for (; k + 3 < key_size; k += 4)
+      {
+        key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3];
+        key[k] ^= i_j;
+        key[k + 1] ^= i_j;
+        key[k + 2] ^= i_j;
+        key[k + 3] ^= i_j;
+      }
+
+      for (; k < key_size; k++)
+      {
+        key_sum += key[k];
+        key[k] ^= i_j;
+      }
+
+      character ^= key_sum;
+      file[index] = character;
+    }
+  }
 }
 
 /**
@@ -126,33 +189,32 @@ void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
  */
 void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
 {
-    /** Example code that uses the available variables */
-
-    for (uint32_t i = 0; i < K; i++)
+  /** Example code that uses the available variables */
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
     {
-        for (uint32_t j = 0; j < K; j++)
-        {
-            int character = file[i * K + j];
+      int character = file[i * K + j];
 
-            int key_sum = 0;
-            for (uint32_t k = 0; k < key_size; k++)
-            {
-                key_sum += key[k];
-                key[k] ^= i * j;
-            }
+      int key_sum = 0;
+      for (uint32_t k = 0; k < key_size; k++)
+      {
+        key_sum += key[k];
+        key[k] ^= i * j;
+      }
 
-            character ^= key_sum;
-            file[i * K + j] = character;
-        }
+      character ^= key_sum;
+      file[i * K + j] = character;
     }
+  }
 }
 
 struct encrypted_file
 {
-    // Pointer to the beginning of the encrypted file
-    char *file;
-    // Size of the encrypted file
-    uint32_t file_size;
+  // Pointer to the beginning of the encrypted file
+  char *file;
+  // Size of the encrypted file
+  uint32_t file_size;
 };
 
 /**
@@ -176,39 +238,39 @@ struct encrypted_file
  * finished. No need to worry about freeing memory :)
  */
 static char *body_processing(ngx_link_func_ctx_t *ctx, char *body,
-                             size_t body_len, size_t *resp_len) {
-    /**
-     * TODO: Replace the example code below with your own code.
-     */
-    struct encrypted_file encrypted_file;
-    // complete_algorithm(body, body_len, mutiplication_matrix, &encrypted_file);
+                             size_t body_len, size_t *resp_len)
+{
+  /**
+   * TODO: Replace the example code below with your own code.
+   */
+  struct encrypted_file encrypted_file;
+  // complete_algorithm(body, body_len, mutiplication_matrix, &encrypted_file);
 
-    struct parsed_request parsed_request;
-    parse_request(body, body_len, &parsed_request);
+  struct parsed_request parsed_request;
+  parse_request(body, body_len, &parsed_request);
 
-    uint32_t K = floor(sqrt(parsed_request.file_size / sizeof(int))); // Ensure that your matrix is squared
-    int *product = (int *)malloc(K * K * sizeof(int));                //  Do not worry about freeing memory
+  uint32_t K = floor(sqrt(parsed_request.file_size / sizeof(int))); // Ensure that your matrix is squared
+  int *product = (int *)malloc(K * K * sizeof(int));                //  Do not worry about freeing memory
 
-    int *mutiplication_matrix = get_multiplication_matrix(ctx, K);
+  int *mutiplication_matrix = get_multiplication_matrix(ctx, K);
 
-    for (size_t i = 0; i < parsed_request.nb_rounds; i++)
-    {
+  for (size_t i = 0; i < parsed_request.nb_rounds; i++)
+  {
 
-        multiply_matrix(parsed_request.file, mutiplication_matrix, product, K);
-        cipher(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
-        // Swap pointers for the next iteration
-        int *tmp = parsed_request.file;
-        parsed_request.file = product;
-        product = tmp;
-    }
+    multiply_matrix(parsed_request.file, mutiplication_matrix, product, K);
+    cipher(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    // Swap pointers for the next iteration
+    int *tmp = parsed_request.file;
+    parsed_request.file = product;
+    product = tmp;
+  }
 
-    encrypted_file.file = (char *)parsed_request.file;
-    encrypted_file.file_size = K * K * sizeof(int);
+  encrypted_file.file = (char *)parsed_request.file;
+  encrypted_file.file_size = K * K * sizeof(int);
 
-    *resp_len = encrypted_file.file_size;
-    return encrypted_file.file;
+  *resp_len = encrypted_file.file_size;
+  return encrypted_file.file;
 }
-
 
 /**
  * @brief Optimized version of boyd_processing.
@@ -233,16 +295,42 @@ static char *body_processing(ngx_link_func_ctx_t *ctx, char *body,
  * finished. No need to worry about freeing memory :)
  */
 static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
-                                       size_t body_len, size_t *resp_len) {
+                                       size_t body_len, size_t *resp_len)
+{
   /**
    * TODO: Replace the example code below with your own code.
    */
-  *resp_len = body_len;
-  return body;
+  struct encrypted_file encrypted_file;
+  // complete_algorithm(body, body_len, mutiplication_matrix, &encrypted_file);
+
+  struct parsed_request parsed_request;
+  parse_request(body, body_len, &parsed_request);
+
+  uint32_t K = floor(sqrt(parsed_request.file_size / sizeof(int))); // Ensure that your matrix is squared
+  int *product = (int *)malloc(K * K * sizeof(int));                //  Do not worry about freeing memory
+
+  int *mutiplication_matrix = get_multiplication_matrix(ctx, K);
+
+  for (size_t i = 0; i < parsed_request.nb_rounds; i++)
+  {
+
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    // Swap pointers for the next iteration
+    int *tmp = parsed_request.file;
+    parsed_request.file = product;
+    product = tmp;
+  }
+
+  encrypted_file.file = (char *)parsed_request.file;
+  encrypted_file.file_size = K * K * sizeof(int);
+
+  *resp_len = encrypted_file.file_size;
+  return encrypted_file.file;
 }
 
-
-void main_function(ngx_link_func_ctx_t *ctx) {
+void main_function(ngx_link_func_ctx_t *ctx)
+{
 
   // Retrieve request's body
   char *body = (char *)ctx->req_body;
@@ -253,7 +341,8 @@ void main_function(ngx_link_func_ctx_t *ctx) {
   char *resp;
 
   char *optimized = (char *)ngx_link_func_get_query_param(ctx, "optimized");
-  if (optimized == 0x0) {
+  if (optimized == 0x0)
+  {
     ngx_link_func_write_resp(
         ctx, 400, "400 Bad Request", "text/plain",
         "No parameters were given. Ensure that your request looks like : "
@@ -263,11 +352,17 @@ void main_function(ngx_link_func_ctx_t *ctx) {
             "http://localhost:8899?optimized=X, where X is either 1 or 0.\n") -
             1);
     return;
-  } else if (*optimized == '1' && strlen(optimized) == 1) {
+  }
+  else if (*optimized == '1' && strlen(optimized) == 1)
+  {
     resp = body_processing_optimized(ctx, body, body_len, &resp_len);
-  } else if (*optimized == '0' && strlen(optimized) == 1) {
+  }
+  else if (*optimized == '0' && strlen(optimized) == 1)
+  {
     resp = body_processing(ctx, body, body_len, &resp_len);
-  } else {
+  }
+  else
+  {
     ngx_link_func_write_resp(
         ctx, 400, "400 Bad Request", "text/plain",
         "Unknown parameter, your parameter is set to %s, but it should be "
@@ -279,14 +374,16 @@ void main_function(ngx_link_func_ctx_t *ctx) {
   }
 
   // Warn user in case of error during processing
-  if (resp == NULL) {
+  if (resp == NULL)
+  {
     ngx_link_func_write_resp(ctx, 500, "500 Internal Server Error",
                              "text/plain", "Failed to parse request's body",
                              sizeof("Failed to parse request's body") - 1);
     return;
   }
   // War user if he forgot to set the response's length
-  if (resp_len == 0) {
+  if (resp_len == 0)
+  {
     ngx_link_func_write_resp(
         ctx, 500, "500 Internal Server Error", "text/plain",
         "You forgot to set the response's length ! :angry:",
@@ -302,7 +399,8 @@ void main_function(ngx_link_func_ctx_t *ctx) {
  *
  * You shouldn't do anything here
  */
-void ngx_link_func_init_cycle(ngx_link_func_cycle_t *cycle) {
+void ngx_link_func_init_cycle(ngx_link_func_cycle_t *cycle)
+{
   ngx_link_func_cyc_log(info, cycle, "%s", "Starting application, new logs !");
   is_service_on = 1;
 }
@@ -312,10 +410,10 @@ void ngx_link_func_init_cycle(ngx_link_func_cycle_t *cycle) {
  *
  * You shouldn't do anything here
  */
-void ngx_link_func_exit_cycle(ngx_link_func_cycle_t *cyc) {
+void ngx_link_func_exit_cycle(ngx_link_func_cycle_t *cyc)
+{
   ngx_link_func_cyc_log(info, cyc, "%s\n",
                         "Shutting down/reloading the Application");
 
   is_service_on = 0;
 }
-
