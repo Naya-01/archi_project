@@ -1,0 +1,1187 @@
+Naya-01 Mon Oct 23 20:53:39 2023 +0200 Merge branch 'main' of https://github.com/Naya-01/archi_project into main
+Naya-01 Mon Oct 23 20:53:35 2023 +0200 refactore python script for graph
+
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15136 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13587 -> 14919 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 15480 bytes
+ ...requests.pdf => keyplot_all_debits_request.pdf} | Bin 14472 -> 14920 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16024 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16084 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15647 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 16292 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 15938 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 15677 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16069 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 15931 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 16193 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ project/plots/latency_vs_thread_debits.pdf         | Bin 13924 -> 13924 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16218 -> 15597 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16867 -> 16247 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16251 -> 15630 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17423 -> 16419 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16818 -> 15814 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17203 -> 16201 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17282 -> 16277 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16677 -> 15673 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17058 -> 16051 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 15939 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15184 -> 15690 bytes
+ project/plots/transfer_vs_filesize_debits_200.pdf  | Bin 16231 -> 15595 bytes
+ project/plots/transfer_vs_filesize_debits_400.pdf  | Bin 16060 -> 15429 bytes
+ project/plots/transfer_vs_filesize_debits_800.pdf  | Bin 16166 -> 15535 bytes
+ .../transfer_vs_keysize_threads_debits_200.pdf     | Bin 16371 -> 15089 bytes
+ .../transfer_vs_keysize_threads_debits_400.pdf     | Bin 17071 -> 15791 bytes
+ .../transfer_vs_keysize_threads_debits_800.pdf     | Bin 16813 -> 15532 bytes
+ project/python_scripts/scriptCsv.py                | 351 +++++----------------
+ 36 files changed, 80 insertions(+), 271 deletions(-)
+JordanHanotiaux Mon Oct 23 20:24:40 2023 +0200 Update test.npf
+
+ project/test.npf | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+Naya-01 Mon Oct 23 10:06:41 2023 +0200 update bash script
+
+ project.tar.gz                                     | Bin 164865 -> 164901 bytes
+ project/make_plots.sh                              |   5 ++++-
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13587 -> 13587 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 14472 -> 14472 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ project/plots/latency_vs_thread_debits.pdf         | Bin 13924 -> 13924 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16218 -> 16218 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16867 -> 16867 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16251 -> 16251 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17423 -> 17423 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16818 -> 16818 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17203 -> 17203 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17282 -> 17282 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16677 -> 16677 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17058 -> 17058 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15184 -> 15184 bytes
+ project/plots/transfer_vs_filesize_debits_200.pdf  | Bin 16231 -> 16231 bytes
+ project/plots/transfer_vs_filesize_debits_400.pdf  | Bin 16060 -> 16060 bytes
+ project/plots/transfer_vs_filesize_debits_800.pdf  | Bin 16166 -> 16166 bytes
+ .../transfer_vs_keysize_threads_debits_200.pdf     | Bin 16371 -> 16371 bytes
+ .../transfer_vs_keysize_threads_debits_400.pdf     | Bin 17071 -> 17071 bytes
+ .../transfer_vs_keysize_threads_debits_800.pdf     | Bin 16813 -> 16813 bytes
+ 37 files changed, 4 insertions(+), 1 deletion(-)
+Naya-01 Sun Oct 22 23:27:09 2023 +0200 add sleep
+
+ project.tar.gz                                     | Bin 1528264 -> 164865 bytes
+ project/make_plots.sh                              |   2 +-
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13591 -> 13587 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 14475 -> 14472 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ project/plots/latency_vs_thread_debits.pdf         | Bin 13924 -> 13924 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16220 -> 16218 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16866 -> 16867 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16258 -> 16251 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17430 -> 17423 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16829 -> 16818 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17212 -> 17203 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17289 -> 17282 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16686 -> 16677 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17063 -> 17058 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15186 -> 15184 bytes
+ project/plots/transfer_vs_filesize_debits_200.pdf  | Bin 16231 -> 16231 bytes
+ project/plots/transfer_vs_filesize_debits_400.pdf  | Bin 16060 -> 16060 bytes
+ project/plots/transfer_vs_filesize_debits_800.pdf  | Bin 16166 -> 16166 bytes
+ .../transfer_vs_keysize_threads_debits_200.pdf     | Bin 16371 -> 16371 bytes
+ .../transfer_vs_keysize_threads_debits_400.pdf     | Bin 17071 -> 17071 bytes
+ .../transfer_vs_keysize_threads_debits_800.pdf     | Bin 16813 -> 16813 bytes
+ 37 files changed, 1 insertion(+), 1 deletion(-)
+Naya-01 Sun Oct 22 22:56:35 2023 +0200 Merge branch 'main' of https://github.com/Naya-01/archi_project into main
+Naya-01 Sun Oct 22 22:56:30 2023 +0200 cleans project & uncomment lines in bash script
+
+ project/make_plots.sh                              |  22 +-
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13591 -> 13591 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 14475 -> 14475 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ project/plots/latency_vs_thread_debits.pdf         | Bin 13924 -> 13924 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16220 -> 16220 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16866 -> 16866 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16258 -> 16258 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17430 -> 17430 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16829 -> 16829 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17212 -> 17212 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17289 -> 17289 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16686 -> 16686 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17063 -> 17063 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15186 -> 15186 bytes
+ project/plots/transfer_vs_filesize_debits_200.pdf  | Bin 16231 -> 16231 bytes
+ project/plots/transfer_vs_filesize_debits_400.pdf  | Bin 16060 -> 16060 bytes
+ project/plots/transfer_vs_filesize_debits_800.pdf  | Bin 16166 -> 16166 bytes
+ .../transfer_vs_keysize_threads_debits_200.pdf     | Bin 16371 -> 16371 bytes
+ .../transfer_vs_keysize_threads_debits_400.pdf     | Bin 17071 -> 17071 bytes
+ .../transfer_vs_keysize_threads_debits_800.pdf     | Bin 16813 -> 16813 bytes
+ project/results/.gitkeep                           |   0
+ project/results/local/local.results                |   0
+ project/results/local/local/test-LATENCY.pdf       | Bin 42915 -> 0 bytes
+ project/results/local/local/test-REQ.pdf           | Bin 43849 -> 0 bytes
+ project/results/local/local/test.npf.results       | 640 ---------------------
+ project/results/local/local/test.npf.results-time  |   0
+ project/results/local/local/testv2-LATENCY.pdf     | Bin 16488 -> 0 bytes
+ project/results/local/local/testv2-REQ.pdf         | Bin 16360 -> 0 bytes
+ project/results/local/local/testv2.npf.results     |  64 ---
+ .../results/local/local/testv2.npf.results-time    |   0
+ project/results/numRound5_size16_key16.txt         |  88 ---
+ project/results/numRound5_size16_key32.txt         |  88 ---
+ project/results/numRound5_size16_key64.txt         |  88 ---
+ project/results/numRound5_size16_key8.txt          |  88 ---
+ project/results/numRound5_size32_key16.txt         |  88 ---
+ project/results/numRound5_size32_key32.txt         |  88 ---
+ project/results/numRound5_size32_key64.txt         |  88 ---
+ project/results/numRound5_size32_key8.txt          |  88 ---
+ project/results/numRound5_size64_key16.txt         |  88 ---
+ project/results/numRound5_size64_key32.txt         |  88 ---
+ project/results/numRound5_size64_key64.txt         |  88 ---
+ project/results/numRound5_size64_key8.txt          |  88 ---
+ project/results/numRound5_size8_key16.txt          |  88 ---
+ project/results/numRound5_size8_key32.txt          |  88 ---
+ project/results/numRound5_size8_key64.txt          |  88 ---
+ project/results/numRound5_size8_key8.txt           |  88 ---
+ 62 files changed, 11 insertions(+), 2123 deletions(-)
+JordanHanotiaux Sun Oct 22 22:28:20 2023 +0200 Merge branch 'main' of https://github.com/Naya-01/archi_project
+JordanHanotiaux Sun Oct 22 22:28:02 2023 +0200 Correction script python
+
+ project/python_scripts/scriptCsv.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+Naya-01 Sun Oct 22 22:22:27 2023 +0200 idk what's happening
+
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13591 -> 13591 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 14475 -> 14475 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ project/plots/latency_vs_thread_debits.pdf         | Bin 0 -> 13924 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16220 -> 16220 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16866 -> 16866 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16258 -> 16258 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17430 -> 17430 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16829 -> 16829 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17212 -> 17212 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17289 -> 17289 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16686 -> 16686 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17063 -> 17063 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15186 -> 15186 bytes
+ project/plots/transfer_vs_filesize_debits_200.pdf  | Bin 0 -> 16231 bytes
+ project/plots/transfer_vs_filesize_debits_400.pdf  | Bin 0 -> 16060 bytes
+ project/plots/transfer_vs_filesize_debits_800.pdf  | Bin 0 -> 16166 bytes
+ .../transfer_vs_keysize_threads_debits_200.pdf}    | Bin 14928 -> 16371 bytes
+ .../transfer_vs_keysize_threads_debits_400.pdf     | Bin 0 -> 17071 bytes
+ .../transfer_vs_keysize_threads_debits_800.pdf     | Bin 0 -> 16813 bytes
+ project/python_scripts/keyScriptOld.py             | 105 ---------------------
+ project/python_scripts/scriptGraphOld.py           |  73 --------------
+ 37 files changed, 178 deletions(-)
+Naya-01 Sun Oct 22 22:19:20 2023 +0200 Merge branch 'main' of https://github.com/Naya-01/archi_project into main
+Naya-01 Sun Oct 22 22:19:09 2023 +0200 generate new pdf
+
+ ...t 0x7fabc0f03310>keyplot_all_debits_latency.pdf | Bin 0 -> 14928 bytes
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 11877 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 13719 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 15129 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 13591 -> 13591 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 14928 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 14475 -> 14475 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 16296 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 16352 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 15917 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 17205 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 16854 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 16591 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 15738 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 16986 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 16849 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 17109 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 22718 -> 22718 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 16220 -> 16220 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 16866 -> 16866 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 16258 -> 16258 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 17430 -> 17430 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 16829 -> 16829 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 17212 -> 17212 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 17289 -> 17289 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 16686 -> 16686 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 17063 -> 17063 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 16403 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 15186 -> 15186 bytes
+ project/python_scripts/keyScriptOld.py             | 105 +++++++++++++++++++++
+ project/python_scripts/scriptCsv.py                |   2 +-
+ project/python_scripts/scriptGraphOld.py           |  73 ++++++++++++++
+ 32 files changed, 179 insertions(+), 1 deletion(-)
+JordanHanotiaux Sun Oct 22 22:12:04 2023 +0200 Add fonctions script python
+
+ project/python_scripts/scriptCsv.py | 48 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+Naya-01 Sun Oct 22 21:58:25 2023 +0200 merge conflicts
+Naya-01 Sun Oct 22 21:51:40 2023 +0200 add var path, extension && move folder into 'project'
+
+ plots/Latency_NumRounds_Average_bar.PNG            | Bin 23210 -> 0 bytes
+ plots/Latency_NumRounds_Average_line.PNG           | Bin 40580 -> 0 bytes
+ plots/fileplot_all_debits_latency.PNG              | Bin 34662 -> 0 bytes
+ plots/fileplot_all_debits_request.PNG              | Bin 30319 -> 0 bytes
+ plots/keyplot_all_debits_latency.PNG               | Bin 34621 -> 0 bytes
+ plots/keyplot_all_debits_requests.PNG              | Bin 31552 -> 0 bytes
+ plots/latency_vs_debits.png                        | Bin 24059 -> 0 bytes
+ plots/latency_vs_filesize_debits_200.PNG           | Bin 57777 -> 0 bytes
+ plots/latency_vs_filesize_debits_400.PNG           | Bin 57178 -> 0 bytes
+ plots/latency_vs_filesize_debits_800.PNG           | Bin 55722 -> 0 bytes
+ plots/latency_vs_filesize_threads_debits_200.PNG   | Bin 68335 -> 0 bytes
+ plots/latency_vs_filesize_threads_debits_400.PNG   | Bin 61618 -> 0 bytes
+ plots/latency_vs_filesize_threads_debits_800.PNG   | Bin 60467 -> 0 bytes
+ plots/latency_vs_keysize.PNG                       | Bin 46590 -> 0 bytes
+ plots/latency_vs_keysize_threads_debits_200.PNG    | Bin 64227 -> 0 bytes
+ plots/latency_vs_keysize_threads_debits_400.PNG    | Bin 72486 -> 0 bytes
+ plots/latency_vs_keysize_threads_debits_800.PNG    | Bin 58016 -> 0 bytes
+ plots/latency_vs_request_count_debits.PNG          | Bin 43988 -> 0 bytes
+ plots/latency_vs_thread_debits.PNG                 | Bin 29101 -> 0 bytes
+ plots/latency_vs_threads_debits.png                | Bin 32862 -> 0 bytes
+ plots/latency_vs_threads_debits_200.PNG            | Bin 31558 -> 0 bytes
+ plots/latency_vs_threads_debits_400.PNG            | Bin 27905 -> 0 bytes
+ plots/latency_vs_threads_debits_800.PNG            | Bin 31599 -> 0 bytes
+ plots/req_latency_vs_filesize_debits_200.PNG       | Bin 61078 -> 0 bytes
+ plots/req_latency_vs_filesize_debits_400.PNG       | Bin 57463 -> 0 bytes
+ plots/req_latency_vs_filesize_debits_800.PNG       | Bin 47227 -> 0 bytes
+ plots/request_vs_filesize_debits_200.PNG           | Bin 32876 -> 0 bytes
+ plots/request_vs_filesize_debits_400.PNG           | Bin 33556 -> 0 bytes
+ plots/request_vs_filesize_debits_800.PNG           | Bin 34259 -> 0 bytes
+ plots/request_vs_filesize_threads_debits_200.PNG   | Bin 37028 -> 0 bytes
+ plots/request_vs_filesize_threads_debits_400.PNG   | Bin 37647 -> 0 bytes
+ plots/request_vs_filesize_threads_debits_800.PNG   | Bin 40193 -> 0 bytes
+ plots/request_vs_keysize_threads_debits_200.PNG    | Bin 37827 -> 0 bytes
+ plots/request_vs_keysize_threads_debits_400.PNG    | Bin 38830 -> 0 bytes
+ plots/request_vs_keysize_threads_debits_800.PNG    | Bin 41216 -> 0 bytes
+ plots/threadsplot_all_debits_latency.PNG           | Bin 38753 -> 0 bytes
+ plots/threadsplot_all_debits_request.PNG           | Bin 50536 -> 0 bytes
+ project/data/.gitkeep                              |   0
+ project/data/results.csv                           | 733 +++++++++++++++++++++
+ project/make_plots.sh                              |   8 +-
+ project/plots/.gitkeep                             |   0
+ project/plots/Latency_NumRounds_Average_bar.pdf    | Bin 0 -> 11877 bytes
+ project/plots/Latency_NumRounds_Average_line.pdf   | Bin 0 -> 13719 bytes
+ project/plots/fileplot_all_debits_latency.pdf      | Bin 0 -> 15129 bytes
+ project/plots/fileplot_all_debits_request.pdf      | Bin 0 -> 13591 bytes
+ project/plots/keyplot_all_debits_latency.pdf       | Bin 0 -> 14928 bytes
+ project/plots/keyplot_all_debits_requests.pdf      | Bin 0 -> 14475 bytes
+ project/plots/latency_vs_filesize_debits_200.pdf   | Bin 0 -> 16296 bytes
+ project/plots/latency_vs_filesize_debits_400.pdf   | Bin 0 -> 16352 bytes
+ project/plots/latency_vs_filesize_debits_800.pdf   | Bin 0 -> 15917 bytes
+ .../latency_vs_filesize_threads_debits_200.pdf     | Bin 0 -> 17205 bytes
+ .../latency_vs_filesize_threads_debits_400.pdf     | Bin 0 -> 16854 bytes
+ .../latency_vs_filesize_threads_debits_800.pdf     | Bin 0 -> 16591 bytes
+ project/plots/latency_vs_keysize.pdf               | Bin 0 -> 15738 bytes
+ .../latency_vs_keysize_threads_debits_200.pdf      | Bin 0 -> 16986 bytes
+ .../latency_vs_keysize_threads_debits_400.pdf      | Bin 0 -> 16849 bytes
+ .../latency_vs_keysize_threads_debits_800.pdf      | Bin 0 -> 17109 bytes
+ project/plots/latency_vs_request_count_debits.pdf  | Bin 0 -> 22718 bytes
+ .../plots/req_latency_vs_filesize_debits_200.pdf   | Bin 0 -> 16220 bytes
+ .../plots/req_latency_vs_filesize_debits_400.pdf   | Bin 0 -> 16866 bytes
+ .../plots/req_latency_vs_filesize_debits_800.pdf   | Bin 0 -> 16258 bytes
+ .../request_vs_filesize_threads_debits_200.pdf     | Bin 0 -> 17430 bytes
+ .../request_vs_filesize_threads_debits_400.pdf     | Bin 0 -> 16829 bytes
+ .../request_vs_filesize_threads_debits_800.pdf     | Bin 0 -> 17212 bytes
+ .../request_vs_keysize_threads_debits_200.pdf      | Bin 0 -> 17289 bytes
+ .../request_vs_keysize_threads_debits_400.pdf      | Bin 0 -> 16686 bytes
+ .../request_vs_keysize_threads_debits_800.pdf      | Bin 0 -> 17063 bytes
+ project/plots/threadsplot_all_debits_latency.pdf   | Bin 0 -> 16403 bytes
+ project/plots/threadsplot_all_debits_request.pdf   | Bin 0 -> 15186 bytes
+ project/python_scripts/keyScriptOld.py             | 105 ---
+ project/python_scripts/scriptCsv.py                |  35 +-
+ project/python_scripts/scriptGraphOld.py           |  73 --
+ 72 files changed, 756 insertions(+), 198 deletions(-)
+JordanHanotiaux Sun Oct 22 21:39:09 2023 +0200 Changement dossier
+
+ project/data/measurements.csv                      | 576 ++++++++++++++++
+ project/data/measurements222.csv                   | 193 ++++++
+ project/data/results.csv                           | 733 +++++++++++++++++++++
+ .../data/results.csv\357\200\272Zone.Identifier"   |   3 +
+ .../plots}/Latency_NumRounds_Average_bar.PNG       | Bin
+ .../plots}/Latency_NumRounds_Average_line.PNG      | Bin
+ .../plots}/fileplot_all_debits_latency.PNG         | Bin
+ .../plots}/fileplot_all_debits_request.PNG         | Bin
+ .../plots}/keyplot_all_debits_latency.PNG          | Bin
+ .../plots}/keyplot_all_debits_requests.PNG         | Bin
+ {plots => project/plots}/latency_vs_debits.png     | Bin
+ .../plots}/latency_vs_filesize_debits_200.PNG      | Bin
+ .../plots}/latency_vs_filesize_debits_400.PNG      | Bin
+ .../plots}/latency_vs_filesize_debits_800.PNG      | Bin
+ .../latency_vs_filesize_threads_debits_200.PNG     | Bin
+ .../latency_vs_filesize_threads_debits_400.PNG     | Bin
+ .../latency_vs_filesize_threads_debits_800.PNG     | Bin
+ {plots => project/plots}/latency_vs_keysize.PNG    | Bin
+ .../latency_vs_keysize_threads_debits_200.PNG      | Bin
+ .../latency_vs_keysize_threads_debits_400.PNG      | Bin
+ .../latency_vs_keysize_threads_debits_800.PNG      | Bin
+ .../plots}/latency_vs_request_count_debits.PNG     | Bin
+ .../plots}/latency_vs_thread_debits.PNG            | Bin
+ .../plots}/latency_vs_threads_debits.png           | Bin
+ .../plots}/latency_vs_threads_debits_200.PNG       | Bin
+ .../plots}/latency_vs_threads_debits_400.PNG       | Bin
+ .../plots}/latency_vs_threads_debits_800.PNG       | Bin
+ .../plots}/req_latency_vs_filesize_debits_200.PNG  | Bin
+ .../plots}/req_latency_vs_filesize_debits_400.PNG  | Bin
+ .../plots}/req_latency_vs_filesize_debits_800.PNG  | Bin
+ .../plots}/request_vs_filesize_debits_200.PNG      | Bin
+ .../plots}/request_vs_filesize_debits_400.PNG      | Bin
+ .../plots}/request_vs_filesize_debits_800.PNG      | Bin
+ .../request_vs_filesize_threads_debits_200.PNG     | Bin
+ .../request_vs_filesize_threads_debits_400.PNG     | Bin
+ .../request_vs_filesize_threads_debits_800.PNG     | Bin
+ .../request_vs_keysize_threads_debits_200.PNG      | Bin
+ .../request_vs_keysize_threads_debits_400.PNG      | Bin
+ .../request_vs_keysize_threads_debits_800.PNG      | Bin
+ .../plots}/threadsplot_all_debits_latency.PNG      | Bin
+ .../plots}/threadsplot_all_debits_request.PNG      | Bin
+ 41 files changed, 1505 insertions(+)
+JordanHanotiaux Sun Oct 22 21:18:54 2023 +0200 Add plots + new result csv
+
+ data/results.csv                                 | 926 ++++++++++++++++++-----
+ plots/Latency_NumRounds_Average_bar.PNG          | Bin 0 -> 23210 bytes
+ plots/Latency_NumRounds_Average_line.PNG         | Bin 0 -> 40580 bytes
+ plots/fileplot_all_debits_latency.PNG            | Bin 0 -> 34662 bytes
+ plots/fileplot_all_debits_request.PNG            | Bin 0 -> 30319 bytes
+ plots/keyplot_all_debits_latency.PNG             | Bin 0 -> 34621 bytes
+ plots/keyplot_all_debits_requests.PNG            | Bin 0 -> 31552 bytes
+ plots/latency_vs_debits.png                      | Bin 0 -> 24059 bytes
+ plots/latency_vs_filesize_debits_200.PNG         | Bin 0 -> 57777 bytes
+ plots/latency_vs_filesize_debits_400.PNG         | Bin 0 -> 57178 bytes
+ plots/latency_vs_filesize_debits_800.PNG         | Bin 0 -> 55722 bytes
+ plots/latency_vs_filesize_threads_debits_200.PNG | Bin 0 -> 68335 bytes
+ plots/latency_vs_filesize_threads_debits_400.PNG | Bin 0 -> 61618 bytes
+ plots/latency_vs_filesize_threads_debits_800.PNG | Bin 0 -> 60467 bytes
+ plots/latency_vs_keysize.PNG                     | Bin 0 -> 46590 bytes
+ plots/latency_vs_keysize_threads_debits_200.PNG  | Bin 0 -> 64227 bytes
+ plots/latency_vs_keysize_threads_debits_400.PNG  | Bin 0 -> 72486 bytes
+ plots/latency_vs_keysize_threads_debits_800.PNG  | Bin 0 -> 58016 bytes
+ plots/latency_vs_request_count_debits.PNG        | Bin 0 -> 43988 bytes
+ plots/latency_vs_thread_debits.PNG               | Bin 0 -> 29101 bytes
+ plots/latency_vs_threads_debits.png              | Bin 0 -> 32862 bytes
+ plots/latency_vs_threads_debits_200.PNG          | Bin 0 -> 31558 bytes
+ plots/latency_vs_threads_debits_400.PNG          | Bin 0 -> 27905 bytes
+ plots/latency_vs_threads_debits_800.PNG          | Bin 0 -> 31599 bytes
+ plots/req_latency_vs_filesize_debits_200.PNG     | Bin 0 -> 61078 bytes
+ plots/req_latency_vs_filesize_debits_400.PNG     | Bin 0 -> 57463 bytes
+ plots/req_latency_vs_filesize_debits_800.PNG     | Bin 0 -> 47227 bytes
+ plots/request_vs_filesize_debits_200.PNG         | Bin 0 -> 32876 bytes
+ plots/request_vs_filesize_debits_400.PNG         | Bin 0 -> 33556 bytes
+ plots/request_vs_filesize_debits_800.PNG         | Bin 0 -> 34259 bytes
+ plots/request_vs_filesize_threads_debits_200.PNG | Bin 0 -> 37028 bytes
+ plots/request_vs_filesize_threads_debits_400.PNG | Bin 0 -> 37647 bytes
+ plots/request_vs_filesize_threads_debits_800.PNG | Bin 0 -> 40193 bytes
+ plots/request_vs_keysize_threads_debits_200.PNG  | Bin 0 -> 37827 bytes
+ plots/request_vs_keysize_threads_debits_400.PNG  | Bin 0 -> 38830 bytes
+ plots/request_vs_keysize_threads_debits_800.PNG  | Bin 0 -> 41216 bytes
+ plots/threadsplot_all_debits_latency.PNG         | Bin 0 -> 38753 bytes
+ plots/threadsplot_all_debits_request.PNG         | Bin 0 -> 50536 bytes
+ 38 files changed, 733 insertions(+), 193 deletions(-)
+Naya-01 Fri Oct 20 12:52:15 2023 +0200 add nes graph for nbRounds & fix color graphs
+
+ project/data/results.csv                           | 1727 --------------------
+ project/make_plots.sh                              |    2 -
+ project/plots/fileplot.PNG                         |  Bin 19203 -> 0 bytes
+ project/plots/fileplot_all_debits_latency.PNG      |  Bin 33853 -> 0 bytes
+ project/plots/fileplot_all_debits_request.PNG      |  Bin 37350 -> 0 bytes
+ project/plots/keyplot.PNG                          |  Bin 21317 -> 0 bytes
+ project/plots/keyplot_all_debits.PNG               |  Bin 39293 -> 0 bytes
+ project/plots/keyplot_all_debits_latency.PNG       |  Bin 34911 -> 0 bytes
+ project/plots/keyplot_all_debits_requests.PNG      |  Bin 38600 -> 0 bytes
+ project/plots/keyplot_debits_100.PNG               |  Bin 24591 -> 0 bytes
+ project/plots/keyplot_debits_200.PNG               |  Bin 23077 -> 0 bytes
+ project/plots/keyplot_debits_500.PNG               |  Bin 24281 -> 0 bytes
+ project/plots/latency_vs_filesize_debits_100.PNG   |  Bin 57538 -> 0 bytes
+ project/plots/latency_vs_filesize_debits_200.PNG   |  Bin 52625 -> 0 bytes
+ project/plots/latency_vs_filesize_debits_500.PNG   |  Bin 69963 -> 0 bytes
+ .../latency_vs_filesize_threads_debits_100.PNG     |  Bin 48342 -> 0 bytes
+ .../latency_vs_filesize_threads_debits_200.PNG     |  Bin 48785 -> 0 bytes
+ .../latency_vs_filesize_threads_debits_500.PNG     |  Bin 69116 -> 0 bytes
+ project/plots/latency_vs_keysize.PNG               |  Bin 55448 -> 0 bytes
+ .../latency_vs_keysize_threads_debits_100.PNG      |  Bin 47995 -> 0 bytes
+ .../latency_vs_keysize_threads_debits_200.PNG      |  Bin 54245 -> 0 bytes
+ .../latency_vs_keysize_threads_debits_500.PNG      |  Bin 66368 -> 0 bytes
+ project/plots/latency_vs_request_count_debits.PNG  |  Bin 34870 -> 0 bytes
+ .../plots/req_latency_vs_filesize_debits_100.PNG   |  Bin 72707 -> 0 bytes
+ .../plots/req_latency_vs_filesize_debits_200.PNG   |  Bin 65115 -> 0 bytes
+ .../plots/req_latency_vs_filesize_debits_500.PNG   |  Bin 80278 -> 0 bytes
+ .../request_vs_filesize_threads_debits_100.PNG     |  Bin 44422 -> 0 bytes
+ .../request_vs_filesize_threads_debits_200.PNG     |  Bin 44405 -> 0 bytes
+ .../request_vs_filesize_threads_debits_500.PNG     |  Bin 45074 -> 0 bytes
+ .../request_vs_keysize_threads_debits_100.PNG      |  Bin 45743 -> 0 bytes
+ .../request_vs_keysize_threads_debits_200.PNG      |  Bin 46152 -> 0 bytes
+ .../request_vs_keysize_threads_debits_500.PNG      |  Bin 45750 -> 0 bytes
+ project/plots/threadsPlot.PNG                      |  Bin 19683 -> 0 bytes
+ project/plots/threadsplot_all_debits_latency.PNG   |  Bin 36039 -> 0 bytes
+ project/plots/threadsplot_all_debits_request.PNG   |  Bin 52352 -> 0 bytes
+ project/python_scripts/scriptCsv.py                |   81 +-
+ 36 files changed, 55 insertions(+), 1755 deletions(-)
+Naya-01 Fri Oct 20 11:18:04 2023 +0200 update combinaison
+
+ project/test.npf             | 8 ++++----
+ project/wrk_scripts/test.lua | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+Naya-01 Fri Oct 20 06:56:12 2023 +0200 rm files
+
+ project/wrk_scripts/script_16_16_1.lua   | 3 ---
+ project/wrk_scripts/script_16_16_10.lua  | 3 ---
+ project/wrk_scripts/script_16_16_100.lua | 3 ---
+ project/wrk_scripts/script_16_32_1.lua   | 3 ---
+ project/wrk_scripts/script_16_32_10.lua  | 3 ---
+ project/wrk_scripts/script_16_32_100.lua | 3 ---
+ project/wrk_scripts/script_16_64_1.lua   | 3 ---
+ project/wrk_scripts/script_16_64_10.lua  | 3 ---
+ project/wrk_scripts/script_16_64_100.lua | 3 ---
+ project/wrk_scripts/script_16_8_1.lua    | 3 ---
+ project/wrk_scripts/script_16_8_10.lua   | 3 ---
+ project/wrk_scripts/script_16_8_100.lua  | 3 ---
+ project/wrk_scripts/script_32_16_1.lua   | 3 ---
+ project/wrk_scripts/script_32_16_10.lua  | 3 ---
+ project/wrk_scripts/script_32_16_100.lua | 3 ---
+ project/wrk_scripts/script_32_32_1.lua   | 3 ---
+ project/wrk_scripts/script_32_32_10.lua  | 3 ---
+ project/wrk_scripts/script_32_32_100.lua | 3 ---
+ project/wrk_scripts/script_32_64_1.lua   | 3 ---
+ project/wrk_scripts/script_32_64_10.lua  | 3 ---
+ project/wrk_scripts/script_32_64_100.lua | 3 ---
+ project/wrk_scripts/script_32_8_1.lua    | 3 ---
+ project/wrk_scripts/script_32_8_10.lua   | 3 ---
+ project/wrk_scripts/script_32_8_100.lua  | 3 ---
+ project/wrk_scripts/script_64_16_1.lua   | 3 ---
+ project/wrk_scripts/script_64_16_10.lua  | 3 ---
+ project/wrk_scripts/script_64_16_100.lua | 3 ---
+ project/wrk_scripts/script_64_32_1.lua   | 3 ---
+ project/wrk_scripts/script_64_32_10.lua  | 3 ---
+ project/wrk_scripts/script_64_32_100.lua | 3 ---
+ project/wrk_scripts/script_64_64_1.lua   | 3 ---
+ project/wrk_scripts/script_64_64_10.lua  | 3 ---
+ project/wrk_scripts/script_64_64_100.lua | 3 ---
+ project/wrk_scripts/script_64_8_1.lua    | 3 ---
+ project/wrk_scripts/script_64_8_10.lua   | 3 ---
+ project/wrk_scripts/script_64_8_100.lua  | 3 ---
+ project/wrk_scripts/script_8_16_1.lua    | 3 ---
+ project/wrk_scripts/script_8_16_10.lua   | 3 ---
+ project/wrk_scripts/script_8_16_100.lua  | 3 ---
+ project/wrk_scripts/script_8_32_1.lua    | 3 ---
+ project/wrk_scripts/script_8_32_10.lua   | 3 ---
+ project/wrk_scripts/script_8_32_100.lua  | 3 ---
+ project/wrk_scripts/script_8_64_1.lua    | 3 ---
+ project/wrk_scripts/script_8_64_10.lua   | 3 ---
+ project/wrk_scripts/script_8_64_100.lua  | 3 ---
+ project/wrk_scripts/script_8_8_1.lua     | 3 ---
+ project/wrk_scripts/script_8_8_10.lua    | 3 ---
+ project/wrk_scripts/script_8_8_100.lua   | 3 ---
+ 48 files changed, 144 deletions(-)
+Naya-01 Fri Oct 20 06:54:56 2023 +0200 add new csv
+
+ data/resultsCopy.csv                               | 1727 ++++++++++++++++++
+ project/data/results.csv                           | 1920 ++++++++++++++++++--
+ project/make_plots.sh                              |   16 +-
+ project/plots/fileplot_all_debits_latency.PNG      |  Bin 39305 -> 33853 bytes
+ project/plots/fileplot_all_debits_request.PNG      |  Bin 37191 -> 37350 bytes
+ project/plots/keyplot_all_debits_latency.PNG       |  Bin 39293 -> 34911 bytes
+ project/plots/keyplot_all_debits_requests.PNG      |  Bin 38482 -> 38600 bytes
+ project/plots/latency_vs_filesize_debits_100.PNG   |  Bin 66487 -> 57538 bytes
+ project/plots/latency_vs_filesize_debits_200.PNG   |  Bin 80742 -> 52625 bytes
+ project/plots/latency_vs_filesize_debits_500.PNG   |  Bin 74196 -> 69963 bytes
+ .../latency_vs_filesize_threads_debits_100.PNG     |  Bin 65810 -> 48342 bytes
+ .../latency_vs_filesize_threads_debits_200.PNG     |  Bin 74650 -> 48785 bytes
+ .../latency_vs_filesize_threads_debits_500.PNG     |  Bin 76042 -> 69116 bytes
+ project/plots/latency_vs_keysize.PNG               |  Bin 51915 -> 55448 bytes
+ .../latency_vs_keysize_threads_debits_100.PNG      |  Bin 75758 -> 47995 bytes
+ .../latency_vs_keysize_threads_debits_200.PNG      |  Bin 63572 -> 54245 bytes
+ .../latency_vs_keysize_threads_debits_500.PNG      |  Bin 68890 -> 66368 bytes
+ project/plots/latency_vs_request_count_debits.PNG  |  Bin 41864 -> 34870 bytes
+ .../plots/req_latency_vs_filesize_debits_100.PNG   |  Bin 63910 -> 72707 bytes
+ .../plots/req_latency_vs_filesize_debits_200.PNG   |  Bin 71819 -> 65115 bytes
+ .../plots/req_latency_vs_filesize_debits_500.PNG   |  Bin 83575 -> 80278 bytes
+ .../request_vs_filesize_threads_debits_100.PNG     |  Bin 44147 -> 44422 bytes
+ .../request_vs_filesize_threads_debits_200.PNG     |  Bin 44349 -> 44405 bytes
+ .../request_vs_filesize_threads_debits_500.PNG     |  Bin 44605 -> 45074 bytes
+ .../request_vs_keysize_threads_debits_100.PNG      |  Bin 45792 -> 45743 bytes
+ .../request_vs_keysize_threads_debits_200.PNG      |  Bin 45971 -> 46152 bytes
+ .../request_vs_keysize_threads_debits_500.PNG      |  Bin 45458 -> 45750 bytes
+ project/plots/threadsplot_all_debits_latency.PNG   |  Bin 41203 -> 36039 bytes
+ project/plots/threadsplot_all_debits_request.PNG   |  Bin 54010 -> 52352 bytes
+ project/results/local/local/test-LATENCY.pdf       |  Bin 16447 -> 42915 bytes
+ project/results/local/local/test-REQ.pdf           |  Bin 0 -> 43849 bytes
+ project/results/local/local/test.npf.results       |  576 ++++++
+ project/wrk_scripts/script_16_16_1.lua             |    3 +
+ project/wrk_scripts/script_16_16_10.lua            |    3 +
+ project/wrk_scripts/script_16_16_100.lua           |    3 +
+ project/wrk_scripts/script_16_32_1.lua             |    3 +
+ project/wrk_scripts/script_16_32_10.lua            |    3 +
+ project/wrk_scripts/script_16_32_100.lua           |    3 +
+ project/wrk_scripts/script_16_64_1.lua             |    3 +
+ project/wrk_scripts/script_16_64_10.lua            |    3 +
+ project/wrk_scripts/script_16_64_100.lua           |    3 +
+ project/wrk_scripts/script_16_8_1.lua              |    3 +
+ project/wrk_scripts/script_16_8_10.lua             |    3 +
+ project/wrk_scripts/script_16_8_100.lua            |    3 +
+ project/wrk_scripts/script_32_16_1.lua             |    3 +
+ project/wrk_scripts/script_32_16_10.lua            |    3 +
+ project/wrk_scripts/script_32_16_100.lua           |    3 +
+ project/wrk_scripts/script_32_32_1.lua             |    3 +
+ project/wrk_scripts/script_32_32_10.lua            |    3 +
+ project/wrk_scripts/script_32_32_100.lua           |    3 +
+ project/wrk_scripts/script_32_64_1.lua             |    3 +
+ project/wrk_scripts/script_32_64_10.lua            |    3 +
+ project/wrk_scripts/script_32_64_100.lua           |    3 +
+ project/wrk_scripts/script_32_8_1.lua              |    3 +
+ project/wrk_scripts/script_32_8_10.lua             |    3 +
+ project/wrk_scripts/script_32_8_100.lua            |    3 +
+ project/wrk_scripts/script_64_16_1.lua             |    3 +
+ project/wrk_scripts/script_64_16_10.lua            |    3 +
+ project/wrk_scripts/script_64_16_100.lua           |    3 +
+ project/wrk_scripts/script_64_32_1.lua             |    3 +
+ project/wrk_scripts/script_64_32_10.lua            |    3 +
+ project/wrk_scripts/script_64_32_100.lua           |    3 +
+ project/wrk_scripts/script_64_64_1.lua             |    3 +
+ project/wrk_scripts/script_64_64_10.lua            |    3 +
+ project/wrk_scripts/script_64_64_100.lua           |    3 +
+ project/wrk_scripts/script_64_8_1.lua              |    3 +
+ project/wrk_scripts/script_64_8_10.lua             |    3 +
+ project/wrk_scripts/script_64_8_100.lua            |    3 +
+ project/wrk_scripts/script_8_16_1.lua              |    3 +
+ project/wrk_scripts/script_8_16_10.lua             |    3 +
+ project/wrk_scripts/script_8_16_100.lua            |    3 +
+ project/wrk_scripts/script_8_32_1.lua              |    3 +
+ project/wrk_scripts/script_8_32_10.lua             |    3 +
+ project/wrk_scripts/script_8_32_100.lua            |    3 +
+ project/wrk_scripts/script_8_64_1.lua              |    3 +
+ project/wrk_scripts/script_8_64_10.lua             |    3 +
+ project/wrk_scripts/script_8_64_100.lua            |    3 +
+ project/wrk_scripts/script_8_8_1.lua               |    3 +
+ project/wrk_scripts/script_8_8_10.lua              |    3 +
+ project/wrk_scripts/script_8_8_100.lua             |    3 +
+ 80 files changed, 4182 insertions(+), 201 deletions(-)
+Naya-01 Thu Oct 19 21:08:07 2023 +0200 add more nbRounds
+
+ project.tar.gz               | Bin 0 -> 1528264 bytes
+ project/test.npf             |   2 +-
+ project/wrk_scripts/test.lua |   2 +-
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+Naya-01 Thu Oct 19 19:15:54 2023 +0200 update name csv file for submission
+
+ data/{measurements.csv => results.csv}        |   0
+ project/data/measurements.csv                 | 193 --------------------------
+ project/data/results.csv                      | 193 ++++++++++++++++++++++++++
+ project/make_plots.sh                         |  16 ++-
+ project/plots/compare3.PNG                    | Bin 61071 -> 0 bytes
+ project/plots/latency_vs_filesize.PNG         | Bin 60371 -> 0 bytes
+ project/plots/latency_vs_filesize_threads.PNG | Bin 54882 -> 0 bytes
+ project/plots/latency_vs_keysize_threads.PNG  | Bin 53509 -> 0 bytes
+ project/python_scripts/scriptCsv.py           |   2 +-
+ 9 files changed, 209 insertions(+), 195 deletions(-)
+JordanHanotiaux Thu Oct 19 13:31:15 2023 +0200 Add Request vs Latency plot
+
+ project/plots/latency_vs_request_count_debits.PNG | Bin 0 -> 41864 bytes
+ project/python_scripts/scriptCsv.py               |  15 ++++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+JordanHanotiaux Thu Oct 19 13:27:55 2023 +0200 Request/sec add plots + Different debit
+
+ project/plots/fileplot.PNG                         | Bin 20828 -> 19203 bytes
+ project/plots/fileplot_all_debits_latency.PNG      | Bin 0 -> 39305 bytes
+ project/plots/fileplot_all_debits_request.PNG      | Bin 0 -> 37191 bytes
+ project/plots/keyplot.PNG                          | Bin 23944 -> 21317 bytes
+ project/plots/keyplot_all_debits.PNG               | Bin 0 -> 39293 bytes
+ project/plots/keyplot_all_debits_latency.PNG       | Bin 0 -> 39293 bytes
+ project/plots/keyplot_all_debits_requests.PNG      | Bin 0 -> 38482 bytes
+ project/plots/keyplot_debits_100.PNG               | Bin 0 -> 24591 bytes
+ project/plots/keyplot_debits_200.PNG               | Bin 0 -> 23077 bytes
+ project/plots/keyplot_debits_500.PNG               | Bin 0 -> 24281 bytes
+ project/plots/latency_vs_filesize_debits_100.PNG   | Bin 0 -> 66487 bytes
+ project/plots/latency_vs_filesize_debits_200.PNG   | Bin 0 -> 80742 bytes
+ project/plots/latency_vs_filesize_debits_500.PNG   | Bin 0 -> 74196 bytes
+ .../latency_vs_filesize_threads_debits_100.PNG     | Bin 0 -> 65810 bytes
+ .../latency_vs_filesize_threads_debits_200.PNG     | Bin 0 -> 74650 bytes
+ .../latency_vs_filesize_threads_debits_500.PNG     | Bin 0 -> 76042 bytes
+ project/plots/latency_vs_keysize.PNG               | Bin 70551 -> 51915 bytes
+ .../latency_vs_keysize_threads_debits_100.PNG      | Bin 0 -> 75758 bytes
+ .../latency_vs_keysize_threads_debits_200.PNG      | Bin 0 -> 63572 bytes
+ .../latency_vs_keysize_threads_debits_500.PNG      | Bin 0 -> 68890 bytes
+ .../plots/req_latency_vs_filesize_debits_100.PNG   | Bin 0 -> 63910 bytes
+ .../plots/req_latency_vs_filesize_debits_200.PNG   | Bin 0 -> 71819 bytes
+ .../plots/req_latency_vs_filesize_debits_500.PNG   | Bin 0 -> 83575 bytes
+ .../request_vs_filesize_threads_debits_100.PNG     | Bin 0 -> 44147 bytes
+ .../request_vs_filesize_threads_debits_200.PNG     | Bin 0 -> 44349 bytes
+ .../request_vs_filesize_threads_debits_500.PNG     | Bin 0 -> 44605 bytes
+ .../request_vs_keysize_threads_debits_100.PNG      | Bin 0 -> 45792 bytes
+ .../request_vs_keysize_threads_debits_200.PNG      | Bin 0 -> 45971 bytes
+ .../request_vs_keysize_threads_debits_500.PNG      | Bin 0 -> 45458 bytes
+ project/plots/threadsPlot.PNG                      | Bin 25431 -> 19683 bytes
+ project/plots/threadsplot_all_debits_latency.PNG   | Bin 0 -> 41203 bytes
+ project/plots/threadsplot_all_debits_request.PNG   | Bin 0 -> 54010 bytes
+ project/python_scripts/scriptCsv.py                | 270 ++++++++++++++-------
+ project/test.npf                                   |   8 +-
+ 34 files changed, 190 insertions(+), 88 deletions(-)
+Naya-01 Wed Oct 18 22:12:45 2023 +0200 add new measure
+
+ data/measurements.csv                              | 386 ++++++++++-----------
+ project/data/measurements.csv                      | 386 ++++++++++-----------
+ project/data/measurements222.csv                   | 193 -----------
+ project/make_plots.sh                              |   8 +-
+ project/python_scripts/scriptCsv.py                |   6 +-
+ project/results/local/local/test-LATENCY.pdf       | Bin 16447 -> 16447 bytes
+ project/results/local/local/testv2-LATENCY.pdf     | Bin 0 -> 16488 bytes
+ project/results/local/local/testv2-REQ.pdf         | Bin 0 -> 16360 bytes
+ project/results/local/local/testv2.npf.results     |  64 ++++
+ .../results/local/local/testv2.npf.results-time    |   0
+ project/server_implementation/libmain.so           | Bin 23320 -> 23280 bytes
+ project/server_implementation/main.o               | Bin 16768 -> 16736 bytes
+ project/test.npf                                   |  10 +-
+ 13 files changed, 465 insertions(+), 588 deletions(-)
+Naya-01 Wed Oct 18 08:38:30 2023 +0200 rename folders
+
+ project/python_scripts/{keyScript.py => keyScriptOld.py}     | 0
+ project/python_scripts/{scriptGraph.py => scriptGraphOld.py} | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+Naya-01 Wed Oct 18 08:37:19 2023 +0200 move plots folder for archive
+
+ project/make_plots.sh                                 |   2 +-
+ {plots => project/plots}/compare3.PNG                 | Bin
+ {plots => project/plots}/fileplot.PNG                 | Bin
+ {plots => project/plots}/keyplot.PNG                  | Bin
+ {plots => project/plots}/latency_vs_filesize.PNG      | Bin
+ .../plots}/latency_vs_filesize_threads.PNG            | Bin
+ {plots => project/plots}/latency_vs_keysize.PNG       | Bin
+ .../plots}/latency_vs_keysize_threads.PNG             | Bin
+ {plots => project/plots}/threadsPlot.PNG              | Bin
+ project/python_scripts/scriptCsv.py                   |  18 +++++++++---------
+ 10 files changed, 10 insertions(+), 10 deletions(-)
+Naya-01 Tue Oct 17 14:24:01 2023 +0200 new graph
+
+ plots/compare3.PNG                    | Bin 61365 -> 61071 bytes
+ plots/fileThreadsplots.PNG            | Bin 34688 -> 0 bytes
+ plots/fileplot.PNG                    | Bin 19735 -> 20828 bytes
+ plots/keyThreadsplots.PNG             | Bin 37425 -> 0 bytes
+ plots/keyplot.PNG                     | Bin 22965 -> 23944 bytes
+ plots/latency_vs_filesize.PNG         | Bin 0 -> 60371 bytes
+ plots/latency_vs_filesize_threads.PNG | Bin 0 -> 54882 bytes
+ plots/latency_vs_keysize.PNG          | Bin 0 -> 70551 bytes
+ plots/latency_vs_keysize_threads.PNG  | Bin 0 -> 53509 bytes
+ project/python_scripts/scriptCsv.py   | 114 ++++++++++++++++++++++------------
+ 10 files changed, 76 insertions(+), 38 deletions(-)
+Naya-01 Tue Oct 17 12:05:12 2023 +0200 add a comparison between 3 plots
+
+ plots/compare3.PNG                  | Bin 0 -> 61365 bytes
+ plots/fileThreadsplots.PNG          | Bin 33105 -> 34688 bytes
+ plots/fileplot.PNG                  | Bin 20832 -> 19735 bytes
+ plots/keyThreadsplots.PNG           | Bin 39355 -> 37425 bytes
+ plots/keyplot.PNG                   | Bin 23823 -> 22965 bytes
+ plots/threadsPlot.PNG               | Bin 22880 -> 25431 bytes
+ project/data/measurements222.csv    | 193 ++++++++++++++++++++++++++++++++++++
+ project/make_plots.sh               |   8 +-
+ project/python_scripts/scriptCsv.py |  28 +++++-
+ 9 files changed, 220 insertions(+), 9 deletions(-)
+Naya-01 Tue Oct 17 11:32:15 2023 +0200 delete ueseless lines
+
+ project/make_plots.sh               | 41 +++----------------------------------
+ project/python_scripts/scriptCsv.py |  2 +-
+ 2 files changed, 4 insertions(+), 39 deletions(-)
+Naya-01 Tue Oct 17 11:30:24 2023 +0200 last update
+
+ project/wrk_scripts/script_16_16_5.lua | 3 ---
+ project/wrk_scripts/script_16_32_5.lua | 3 ---
+ project/wrk_scripts/script_16_64_5.lua | 3 ---
+ project/wrk_scripts/script_16_8_5.lua  | 3 ---
+ project/wrk_scripts/script_32_16_5.lua | 3 ---
+ project/wrk_scripts/script_32_32_5.lua | 3 ---
+ project/wrk_scripts/script_32_64_5.lua | 3 ---
+ project/wrk_scripts/script_32_8_5.lua  | 3 ---
+ project/wrk_scripts/script_64_16_5.lua | 3 ---
+ project/wrk_scripts/script_64_32_5.lua | 3 ---
+ project/wrk_scripts/script_64_64_5.lua | 3 ---
+ project/wrk_scripts/script_64_8_5.lua  | 3 ---
+ project/wrk_scripts/script_8_16_5.lua  | 3 ---
+ project/wrk_scripts/script_8_32_5.lua  | 3 ---
+ project/wrk_scripts/script_8_64_5.lua  | 3 ---
+ project/wrk_scripts/script_8_8_5.lua   | 3 ---
+ 16 files changed, 48 deletions(-)
+Naya-01 Tue Oct 17 11:29:56 2023 +0200 last update
+
+ data/measurements222.csv                          | 193 ++++++++++++++++++++++
+ plots/fileThreadsplots.PNG                        | Bin 34688 -> 33105 bytes
+ plots/fileplot.PNG                                | Bin 19735 -> 20832 bytes
+ plots/keyThreadsplots.PNG                         | Bin 37425 -> 39355 bytes
+ plots/keyplot.PNG                                 | Bin 22965 -> 23823 bytes
+ plots/threadsPlot.PNG                             | Bin 25288 -> 22880 bytes
+ project/make_plots.sh                             |   5 +-
+ project/python_scripts/scriptCsv.py               |   4 +-
+ project/results/local/local.results               |   0
+ project/results/local/local/test-LATENCY.pdf      | Bin 0 -> 16447 bytes
+ project/results/local/local/test.npf.results      |  64 +++++++
+ project/results/local/local/test.npf.results-time |   0
+ project/test.npf                                  |  12 +-
+ project/wrk_scripts/script_16_16_5.lua            |   3 +
+ project/wrk_scripts/script_16_32_5.lua            |   3 +
+ project/wrk_scripts/script_16_64_5.lua            |   3 +
+ project/wrk_scripts/script_16_8_5.lua             |   3 +
+ project/wrk_scripts/script_32_16_5.lua            |   3 +
+ project/wrk_scripts/script_32_32_5.lua            |   3 +
+ project/wrk_scripts/script_32_64_5.lua            |   3 +
+ project/wrk_scripts/script_32_8_5.lua             |   3 +
+ project/wrk_scripts/script_64_16_5.lua            |   3 +
+ project/wrk_scripts/script_64_32_5.lua            |   3 +
+ project/wrk_scripts/script_64_64_5.lua            |   3 +
+ project/wrk_scripts/script_64_8_5.lua             |   3 +
+ project/wrk_scripts/script_8_16_5.lua             |   3 +
+ project/wrk_scripts/script_8_32_5.lua             |   3 +
+ project/wrk_scripts/script_8_64_5.lua             |   3 +
+ project/wrk_scripts/script_8_8_5.lua              |   3 +
+ project/wrk_scripts/test.lua                      |   8 +-
+ 30 files changed, 324 insertions(+), 10 deletions(-)
+Naya-01 Tue Oct 17 10:11:00 2023 +0200 rename folder python_scripts
+
+ project/{python_script => python_scripts}/keyScript.py   | 0
+ project/{python_script => python_scripts}/scriptCsv.py   | 0
+ project/{python_script => python_scripts}/scriptGraph.py | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+Naya-01 Tue Oct 17 10:09:03 2023 +0200 merge conflicts
+Naya-01 Tue Oct 17 10:07:30 2023 +0200 add missing items
+
+ .gitignore                                         |   2 +-
+ npf                                                |   1 +
+ plots/fileThreadsplots.PNG                         | Bin 0 -> 34688 bytes
+ plots/fileplot.PNG                                 | Bin 0 -> 19735 bytes
+ plots/keyThreadsplots.PNG                          | Bin 0 -> 37425 bytes
+ plots/keyplot.PNG                                  | Bin 0 -> 22965 bytes
+ plots/threadsPlot.PNG                              | Bin 0 -> 25288 bytes
+ project/data/measurements.csv                      | 193 +++++++++++++++++++++
+ project/make_plots.sh                              |   2 +-
+ .../{python_scripts => python_script}/keyScript.py |   0
+ .../{python_scripts => python_script}/scriptCsv.py |   0
+ .../scriptGraph.py                                 |   0
+ 12 files changed, 196 insertions(+), 2 deletions(-)
+Rayan Tue Oct 17 10:05:54 2023 +0200 Update .gitignore
+
+ .gitignore | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+Naya-01 Tue Oct 17 10:03:01 2023 +0200 update scripts
+
+ project/data/measurements.csv                      | 193 ---------------------
+ project/make_plots.sh                              |  51 +++---
+ project/python_script/scriptCsv.py                 |  23 ---
+ .../{python_script => python_scripts}/keyScript.py |   0
+ project/python_scripts/scriptCsv.py                |  94 ++++++++++
+ .../scriptGraph.py                                 |   0
+ project/server_implementation/libmain.so           | Bin 23328 -> 23320 bytes
+ project/server_implementation/main.c               |  40 +++--
+ project/server_implementation/main.o               | Bin 16768 -> 16768 bytes
+ 9 files changed, 145 insertions(+), 256 deletions(-)
+Naya-01 Mon Oct 16 21:07:57 2023 +0200 extract NPF text in csv & make plots with this data
+
+ data/measurements.csv                      | 193 +++++++++++++++++++++++++++++
+ project/data/measurements.csv              | 193 +++++++++++++++++++++++++++++
+ project/make_plots.sh                      |   8 +-
+ project/{ => python_script}/keyScript.py   |  35 ++++--
+ project/python_script/scriptCsv.py         |  23 ++++
+ project/{ => python_script}/scriptGraph.py |   0
+ 6 files changed, 439 insertions(+), 13 deletions(-)
+Naya-01 Mon Oct 16 15:03:32 2023 +0200 add struct
+
+ project/server_implementation/main.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+Naya-01 Mon Oct 16 09:08:21 2023 +0200 add npf test for graph
+
+ project/make_plots.sh                      | 11 ++--
+ project/results/.gitkeep                   |  0
+ project/results/numRound5_size16_key16.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size16_key32.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size16_key64.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size16_key8.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size32_key16.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size32_key32.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size32_key64.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size32_key8.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size64_key16.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size64_key32.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size64_key64.txt | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size64_key8.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size8_key16.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size8_key32.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size8_key64.txt  | 88 ++++++++++++++++++++++++++++++
+ project/results/numRound5_size8_key8.txt   | 88 ++++++++++++++++++++++++++++++
+ project/test.npf                           | 11 ++++
+ 19 files changed, 1425 insertions(+), 5 deletions(-)
+Naya-01 Mon Oct 16 00:47:58 2023 +0200 Add keyScript for graph
+
+ project/keyScript.py          | 90 +++++++++++++++++++++++++++++++++++++++++++
+ project/make_plots.sh         |  1 +
+ project/measurements/.gitkeep |  0
+ 3 files changed, 91 insertions(+)
+Naya-01 Sun Oct 15 21:45:52 2023 +0200 fix wrk body
+
+ project/wrk_scripts/test.lua | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+JordanHanotiaux Sat Oct 14 12:46:06 2023 +0200 Change script bash and lua
+
+ project/make_plots.sh        | 41 +++++++++++++++++++---------------
+ project/wrk_scripts/test.lua | 53 ++++++++++++++++++++++++++++++++------------
+ 2 files changed, 62 insertions(+), 32 deletions(-)
+Naya-01 Fri Oct 13 16:51:28 2023 +0200 delete ms/us from data & add graph example
+
+ project/scriptGraph.py | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+Naya-01 Thu Oct 12 17:15:31 2023 +0200 improves functions
+
+ project/scriptGraph.py | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
+Naya-01 Thu Oct 12 15:07:26 2023 +0200 add parsing && refactoring
+
+ project/scriptGraph.py | 39 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 8 deletions(-)
+Naya-01 Wed Oct 11 21:39:26 2023 +0200 refactoring python script  && read all files in the results folder
+
+ project/scriptGraph.py | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
+Naya-01 Wed Oct 11 21:28:14 2023 +0200 move scripts & fix path
+
+ make_plots.sh          | 35 -----------------------------------
+ project/make_plots.sh  | 34 +++++++++++++++++++++++++++++++++-
+ project/scriptGraph.py |  2 +-
+ 3 files changed, 34 insertions(+), 37 deletions(-)
+Naya-01 Wed Oct 11 21:00:44 2023 +0200 python script parsing
+
+ project/scriptGraph.py | 25 +++++++++++++++++++++++++
+ scriptGraph.py         |  1 -
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+JordanHanotiaux Wed Oct 11 17:58:58 2023 +0200 Add test.lua
+
+ make_plots.sh                |  5 ++---
+ project/wrk_scripts/test.lua | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 3 deletions(-)
+JordanHanotiaux Wed Oct 11 09:41:16 2023 +0200 Add repository from forge
+
+ .gitignore                                         |    2 +-
+ Makefile                                           |    2 +
+ README.md                                          |  267 +-
+ data/result.cv                                     |    0
+ expected_response.html                             |    1 +
+ project/data/results.csv                           |    0
+ project/index.html                                 |    1 +
+ project/make_plots.sh                              |    3 +
+ project/server_implementation/main.c               |   26 +-
+ project/wrk_scripts/post.lua                       |    3 +
+ wrk2-DeathStarBench/.gitignore                     |   19 +
+ .../CoordinatedOmission/wrk2_CleanVsCO.png         |  Bin 0 -> 104978 bytes
+ wrk2-DeathStarBench/LICENSE                        |  177 +
+ wrk2-DeathStarBench/Makefile                       |   68 +
+ wrk2-DeathStarBench/NOTICE                         |  146 +
+ wrk2-DeathStarBench/README.md                      |  860 +++
+ wrk2-DeathStarBench/SCRIPTING                      |  112 +
+ wrk2-DeathStarBench/deps/luajit/COPYRIGHT          |   56 +
+ wrk2-DeathStarBench/deps/luajit/Makefile           |  151 +
+ wrk2-DeathStarBench/deps/luajit/README             |   16 +
+ .../deps/luajit/doc/bluequad-print.css             |  166 +
+ wrk2-DeathStarBench/deps/luajit/doc/bluequad.css   |  325 +
+ wrk2-DeathStarBench/deps/luajit/doc/changes.html   |  928 +++
+ wrk2-DeathStarBench/deps/luajit/doc/contact.html   |  102 +
+ wrk2-DeathStarBench/deps/luajit/doc/ext_c_api.html |  187 +
+ wrk2-DeathStarBench/deps/luajit/doc/ext_ffi.html   |  330 +
+ .../deps/luajit/doc/ext_ffi_api.html               |  566 ++
+ .../deps/luajit/doc/ext_ffi_semantics.html         | 1245 ++++
+ .../deps/luajit/doc/ext_ffi_tutorial.html          |  601 ++
+ wrk2-DeathStarBench/deps/luajit/doc/ext_jit.html   |  199 +
+ .../deps/luajit/doc/extensions.html                |  408 +
+ wrk2-DeathStarBench/deps/luajit/doc/faq.html       |  184 +
+ .../deps/luajit/doc/img/contact.png                |  Bin 0 -> 1340 bytes
+ wrk2-DeathStarBench/deps/luajit/doc/install.html   |  631 ++
+ wrk2-DeathStarBench/deps/luajit/doc/luajit.html    |  228 +
+ wrk2-DeathStarBench/deps/luajit/doc/running.html   |  306 +
+ wrk2-DeathStarBench/deps/luajit/doc/status.html    |  125 +
+ wrk2-DeathStarBench/deps/luajit/dynasm/dasm_arm.h  |  456 ++
+ .../deps/luajit/dynasm/dasm_arm.lua                | 1122 +++
+ wrk2-DeathStarBench/deps/luajit/dynasm/dasm_mips.h |  416 ++
+ .../deps/luajit/dynasm/dasm_mips.lua               |  953 +++
+ wrk2-DeathStarBench/deps/luajit/dynasm/dasm_ppc.h  |  412 ++
+ .../deps/luajit/dynasm/dasm_ppc.lua                | 1249 ++++
+ .../deps/luajit/dynasm/dasm_proto.h                |   83 +
+ .../deps/luajit/dynasm/dasm_x64.lua                |   12 +
+ wrk2-DeathStarBench/deps/luajit/dynasm/dasm_x86.h  |  471 ++
+ .../deps/luajit/dynasm/dasm_x86.lua                | 1937 +++++
+ wrk2-DeathStarBench/deps/luajit/dynasm/dynasm.lua  | 1094 +++
+ wrk2-DeathStarBench/deps/luajit/etc/luajit.1       |   88 +
+ wrk2-DeathStarBench/deps/luajit/etc/luajit.pc      |   25 +
+ wrk2-DeathStarBench/deps/luajit/src/Makefile       |  686 ++
+ wrk2-DeathStarBench/deps/luajit/src/Makefile.dep   |  226 +
+ wrk2-DeathStarBench/deps/luajit/src/host/README    |    4 +
+ wrk2-DeathStarBench/deps/luajit/src/host/buildvm.c |  516 ++
+ wrk2-DeathStarBench/deps/luajit/src/host/buildvm.h |  104 +
+ .../deps/luajit/src/host/buildvm_asm.c             |  313 +
+ .../deps/luajit/src/host/buildvm_fold.c            |  229 +
+ .../deps/luajit/src/host/buildvm_lib.c             |  398 +
+ .../deps/luajit/src/host/buildvm_peobj.c           |  368 +
+ .../deps/luajit/src/host/genminilua.lua            |  428 ++
+ wrk2-DeathStarBench/deps/luajit/src/host/minilua.c | 7770 ++++++++++++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/jit/bc.lua     |  191 +
+ wrk2-DeathStarBench/deps/luajit/src/jit/bcsave.lua |  659 ++
+ .../deps/luajit/src/jit/dis_arm.lua                |  689 ++
+ .../deps/luajit/src/jit/dis_mips.lua               |  428 ++
+ .../deps/luajit/src/jit/dis_mipsel.lua             |   20 +
+ .../deps/luajit/src/jit/dis_ppc.lua                |  591 ++
+ .../deps/luajit/src/jit/dis_x64.lua                |   20 +
+ .../deps/luajit/src/jit/dis_x86.lua                |  836 +++
+ wrk2-DeathStarBench/deps/luajit/src/jit/dump.lua   |  699 ++
+ wrk2-DeathStarBench/deps/luajit/src/jit/v.lua      |  167 +
+ wrk2-DeathStarBench/deps/luajit/src/lauxlib.h      |  167 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_aux.c      |  356 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_base.c     |  683 ++
+ wrk2-DeathStarBench/deps/luajit/src/lib_bit.c      |   74 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_debug.c    |  405 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_ffi.c      |  850 +++
+ wrk2-DeathStarBench/deps/luajit/src/lib_init.c     |   55 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_io.c       |  539 ++
+ wrk2-DeathStarBench/deps/luajit/src/lib_jit.c      |  663 ++
+ wrk2-DeathStarBench/deps/luajit/src/lib_math.c     |  233 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_os.c       |  280 +
+ wrk2-DeathStarBench/deps/luajit/src/lib_package.c  |  602 ++
+ wrk2-DeathStarBench/deps/luajit/src/lib_string.c   |  940 +++
+ wrk2-DeathStarBench/deps/luajit/src/lib_table.c    |  300 +
+ wrk2-DeathStarBench/deps/luajit/src/lj.supp        |   26 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_alloc.c     | 1390 ++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_alloc.h     |   17 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_api.c       | 1200 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_arch.h      |  426 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm.c       | 1914 +++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm.h       |   17 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm_arm.h   | 2361 ++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm_mips.h  | 1977 +++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm_ppc.h   | 2167 ++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_asm_x86.h   | 2794 +++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_bc.c        |   14 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_bc.h        |  261 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_bcdump.h    |   66 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_bcread.c    |  476 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_bcwrite.c   |  396 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_carith.c    |  351 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_carith.h    |   27 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ccall.c     |  900 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ccall.h     |  171 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ccallback.c |  644 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ccallback.h |   25 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_cconv.c     |  751 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_cconv.h     |   70 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_cdata.c     |  285 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_cdata.h     |   75 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_char.c      |   43 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_char.h      |   42 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_clib.c      |  409 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_clib.h      |   29 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_cparse.c    | 1872 +++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_cparse.h    |   65 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_crecord.c   | 1653 +++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_crecord.h   |   31 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ctype.c     |  634 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ctype.h     |  461 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_debug.c     |  603 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_debug.h     |   61 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_def.h       |  349 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_dispatch.c  |  494 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_dispatch.h  |  131 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_emit_arm.h  |  356 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_emit_mips.h |  211 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_emit_ppc.h  |  238 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_emit_x86.h  |  466 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_err.c       |  785 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_err.h       |   41 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_errmsg.h    |  193 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ff.h        |   18 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ffrecord.c  |  888 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ffrecord.h  |   24 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_frame.h     |  183 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_func.c      |  185 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_func.h      |   24 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_gc.c        |  849 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_gc.h        |  134 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_gdbjit.c    |  793 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_gdbjit.h    |   22 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_ir.c        |  501 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ir.h        |  551 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_ircall.h    |  271 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_iropt.h     |  161 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_jit.h       |  416 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_lex.c       |  481 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_lex.h       |   85 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_lib.c       |  258 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_lib.h       |  112 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_load.c      |  168 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_mcode.c     |  373 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_mcode.h     |   30 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_meta.c      |  466 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_meta.h      |   37 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_obj.c       |   35 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_obj.h       |  856 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_dce.c   |   77 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_fold.c  | 2297 ++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_loop.c  |  436 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_mem.c   |  917 +++
+ .../deps/luajit/src/lj_opt_narrow.c                |  648 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_sink.c  |  245 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_opt_split.c |  731 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_parse.c     | 2752 +++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_parse.h     |   18 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_record.c    | 2248 ++++++
+ wrk2-DeathStarBench/deps/luajit/src/lj_record.h    |   44 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_snap.c      |  865 +++
+ wrk2-DeathStarBench/deps/luajit/src/lj_snap.h      |   34 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_state.c     |  287 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_state.h     |   35 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_str.c       |  339 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_str.h       |   50 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_strscan.c   |  497 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_strscan.h   |   39 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_tab.c       |  631 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_tab.h       |   70 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_target.h    |  162 +
+ .../deps/luajit/src/lj_target_arm.h                |  274 +
+ .../deps/luajit/src/lj_target_mips.h               |  257 +
+ .../deps/luajit/src/lj_target_ppc.h                |  280 +
+ .../deps/luajit/src/lj_target_x86.h                |  342 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_trace.c     |  815 ++
+ wrk2-DeathStarBench/deps/luajit/src/lj_trace.h     |   53 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_traceerr.h  |   61 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_udata.c     |   34 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_udata.h     |   14 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_vm.h        |  116 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_vmevent.c   |   57 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_vmevent.h   |   59 +
+ wrk2-DeathStarBench/deps/luajit/src/lj_vmmath.c    |  140 +
+ wrk2-DeathStarBench/deps/luajit/src/ljamalg.c      |   93 +
+ wrk2-DeathStarBench/deps/luajit/src/lua.h          |  393 +
+ wrk2-DeathStarBench/deps/luajit/src/lua.hpp        |    9 +
+ wrk2-DeathStarBench/deps/luajit/src/luaconf.h      |  156 +
+ wrk2-DeathStarBench/deps/luajit/src/luajit.c       |  571 ++
+ wrk2-DeathStarBench/deps/luajit/src/luajit.h       |   70 +
+ wrk2-DeathStarBench/deps/luajit/src/lualib.h       |   43 +
+ wrk2-DeathStarBench/deps/luajit/src/msvcbuild.bat  |  113 +
+ wrk2-DeathStarBench/deps/luajit/src/ps4build.bat   |  103 +
+ wrk2-DeathStarBench/deps/luajit/src/vm_arm.dasc    | 4487 +++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/vm_mips.dasc   | 4241 +++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/vm_ppc.dasc    | 5137 +++++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/vm_ppcspe.dasc | 3691 ++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/vm_x86.dasc    | 6374 ++++++++++++++++
+ wrk2-DeathStarBench/deps/luajit/src/xedkbuild.bat  |   92 +
+ wrk2-DeathStarBench/gen_path.py                    |   13 +
+ wrk2-DeathStarBench/src/ae.c                       |  435 ++
+ wrk2-DeathStarBench/src/ae.h                       |  118 +
+ wrk2-DeathStarBench/src/ae_epoll.c                 |  131 +
+ wrk2-DeathStarBench/src/ae_evport.c                |  315 +
+ wrk2-DeathStarBench/src/ae_kqueue.c                |  132 +
+ wrk2-DeathStarBench/src/ae_select.c                |   99 +
+ wrk2-DeathStarBench/src/aprintf.c                  |   27 +
+ wrk2-DeathStarBench/src/aprintf.h                  |    6 +
+ wrk2-DeathStarBench/src/config.h                   |   13 +
+ wrk2-DeathStarBench/src/hdr_histogram.c            |  773 ++
+ wrk2-DeathStarBench/src/hdr_histogram.h            |  330 +
+ wrk2-DeathStarBench/src/http_parser.c              | 2412 ++++++
+ wrk2-DeathStarBench/src/http_parser.h              |  330 +
+ wrk2-DeathStarBench/src/main.h                     |   57 +
+ wrk2-DeathStarBench/src/net.c                      |   39 +
+ wrk2-DeathStarBench/src/net.h                      |   29 +
+ wrk2-DeathStarBench/src/script.c                   |  573 ++
+ wrk2-DeathStarBench/src/script.h                   |   36 +
+ wrk2-DeathStarBench/src/ssl.c                      |   99 +
+ wrk2-DeathStarBench/src/ssl.h                      |   14 +
+ wrk2-DeathStarBench/src/stats.c                    |  147 +
+ wrk2-DeathStarBench/src/stats.h                    |   46 +
+ wrk2-DeathStarBench/src/tinymt64.c                 |  129 +
+ wrk2-DeathStarBench/src/tinymt64.h                 |  210 +
+ wrk2-DeathStarBench/src/units.c                    |  104 +
+ wrk2-DeathStarBench/src/units.h                    |   12 +
+ wrk2-DeathStarBench/src/wrk.c                      | 1054 +++
+ wrk2-DeathStarBench/src/wrk.h                      |   93 +
+ wrk2-DeathStarBench/src/wrk.lua                    |   74 +
+ wrk2-DeathStarBench/src/zmalloc.c                  |  287 +
+ wrk2-DeathStarBench/src/zmalloc.h                  |   83 +
+ 241 files changed, 123827 insertions(+), 27 deletions(-)
+Naya-01 Tue Oct 10 14:02:19 2023 +0200 add script python (hello world)
+
+ scriptGraph.py | 1 +
+ 1 file changed, 1 insertion(+)
+Naya-01 Tue Oct 10 14:00:21 2023 +0200 add a first draft script to generate some data
+
+ make_plots.sh | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+Naya-01 Tue Oct 10 09:58:17 2023 +0200 restore body_procession from phase 1
+
+ project/server_implementation/main.c | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
+Naya-01 Tue Oct 10 09:55:53 2023 +0200 update main.c for phase 2
+
+ project/server_implementation/main.c | 167 ++++++++++++++---------------------
+ 1 file changed, 65 insertions(+), 102 deletions(-)
+Naya-01 Tue Oct 10 08:50:05 2023 +0200 add project phase 1
+
+ .gitignore | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+Naya-01 Tue Oct 10 08:48:42 2023 +0200 add project phase 1
+
+ project/nginx-conf/INGInious.conf        |  15 ++
+ project/nginx-conf/project.conf          |  20 +++
+ project/server_implementation/Makefile   |  14 ++
+ project/server_implementation/libmain.so | Bin 0 -> 23328 bytes
+ project/server_implementation/main.c     | 273 +++++++++++++++++++++++++++++++
+ project/server_implementation/main.o     | Bin 0 -> 16768 bytes
+ 6 files changed, 322 insertions(+)
+Rayan Tue Oct 10 08:38:55 2023 +0200 Initial commit
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
