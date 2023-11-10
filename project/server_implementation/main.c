@@ -91,6 +91,33 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
   request->file = (int *)file_start;
 }
 
+void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t K)
+{
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
+    {
+      result[i * K + j] = 0;
+    }
+  }
+
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
+    {
+      int sum = 0;
+      for (uint32_t k = 0; k < K; k += 4)
+      {
+        sum += matrix1[i * K + k] * matrix2[k * K + j];
+        sum += matrix1[i * K + (k + 1)] * matrix2[(k + 1) * K + j];
+        sum += matrix1[i * K + (k + 2)] * matrix2[(k + 2) * K + j];
+        sum += matrix1[i * K + (k + 3)] * matrix2[(k + 3) * K + j];
+      }
+      result[i * K + j] = sum;
+    }
+  }
+}
+
 /**
  * @brief Computes the product of two matrixes
  *
@@ -103,28 +130,6 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
  */
 void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
-
-  #ifdef UNROLL
-  for (uint32_t i = 0; i < K; i++) {
-    for (uint32_t j = 0; j < K; j++) {
-      result[i * K + j] = 0;
-    }
-  }
-
-  for (uint32_t i = 0; i < K; i++) {
-    for (uint32_t j = 0; j < K; j++) {
-      int sum = 0;  
-      for (uint32_t k = 0; k < K; k += 4) {
-        sum += matrix1[i * K + k] * matrix2[k * K + j];
-        sum += matrix1[i * K + (k+1)] * matrix2[(k+1) * K + j];
-        sum += matrix1[i * K + (k+2)] * matrix2[(k+2) * K + j];
-        sum += matrix1[i * K + (k+3)] * matrix2[(k+3) * K + j];
-      }
-      result[i * K + j] = sum;
-
-    }
-  }
-  #else
   for (uint32_t i = 0; i < K; i++)
   {
     for (uint32_t j = 0; j < K; j++)
@@ -136,27 +141,12 @@ void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
       }
     }
   }
-  #endif
 }
 
-/**
- * @brief Encrypts a file
- *
- * @param file : a K x K matrix containing the file
- * @param key : a `key_size` array containing the key
- * @param key_size : Length of the key
- * @param K : Dimension of the file matrix
- *
- * @note `file` should be modified to contain the encrypted file.
- */
-void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
+void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
 {
-  /** Example code that uses the available variables */
-
   for (uint32_t i = 0; i < K; i++)
   {
-
-#ifdef UNROLL
     for (uint32_t j = 0; j < K; j++)
     {
       uint32_t index = i * K + j;
@@ -184,8 +174,24 @@ void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
       character ^= key_sum;
       file[index] = character;
     }
+  }
+}
 
-#else
+/**
+ * @brief Encrypts a file
+ *
+ * @param file : a K x K matrix containing the file
+ * @param key : a `key_size` array containing the key
+ * @param key_size : Length of the key
+ * @param K : Dimension of the file matrix
+ *
+ * @note `file` should be modified to contain the encrypted file.
+ */
+void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
+{
+  /** Example code that uses the available variables */
+  for (uint32_t i = 0; i < K; i++)
+  {
     for (uint32_t j = 0; j < K; j++)
     {
       int character = file[i * K + j];
@@ -200,7 +206,6 @@ void cipher(int *file, int *key, uint32_t key_size, uint32_t K)
       character ^= key_sum;
       file[i * K + j] = character;
     }
-#endif
   }
 }
 
@@ -295,8 +300,33 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
   /**
    * TODO: Replace the example code below with your own code.
    */
-  *resp_len = body_len;
-  return body;
+  struct encrypted_file encrypted_file;
+  // complete_algorithm(body, body_len, mutiplication_matrix, &encrypted_file);
+
+  struct parsed_request parsed_request;
+  parse_request(body, body_len, &parsed_request);
+
+  uint32_t K = floor(sqrt(parsed_request.file_size / sizeof(int))); // Ensure that your matrix is squared
+  int *product = (int *)malloc(K * K * sizeof(int));                //  Do not worry about freeing memory
+
+  int *mutiplication_matrix = get_multiplication_matrix(ctx, K);
+
+  for (size_t i = 0; i < parsed_request.nb_rounds; i++)
+  {
+
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    // Swap pointers for the next iteration
+    int *tmp = parsed_request.file;
+    parsed_request.file = product;
+    product = tmp;
+  }
+
+  encrypted_file.file = (char *)parsed_request.file;
+  encrypted_file.file_size = K * K * sizeof(int);
+
+  *resp_len = encrypted_file.file_size;
+  return encrypted_file.file;
 }
 
 void main_function(ngx_link_func_ctx_t *ctx)
