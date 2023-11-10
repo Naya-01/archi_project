@@ -101,14 +101,24 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
  */
 void multiply_matrix(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
+    int r;
     for (uint32_t i = 0; i < K; i++)
     {
         for (uint32_t j = 0; j < K; j++)
-        {
-            result[i * K + j] = 0;
+        {	
+	    #ifdef LineVersion
+                r = matrix1[i * K + j];
+            #else
+                result[i * K + j] = 0;
+            #endif
+          
             for (uint32_t k = 0; k < K; k++)
             {
-                result[i * K + j] += matrix1[i * K + k] * matrix2[k * K + j];
+	        #ifdef LineVersion
+                    result[i * K + k] += r * matrix2[j * K + k];
+                #else
+                    result[i * K + j] += matrix1[i * K + k] * matrix2[k * K + j];
+                #endif 
             }
         }
     }
