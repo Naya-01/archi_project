@@ -21,8 +21,12 @@ latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk
 req_s=$(echo "$result" | grep "Requests/sec" |  awk '{print $2}')
 transfer=$(echo "$result" | grep "Transfer/sec" | awk '{print $2}')
 nbRequest=$(echo "$result" |tail -n 3 | grep "requests" | awk '{print $1}')
+mean=$(echo "$result" | tail -n 7 | grep "Mean" | awk '{gsub(",",""); print $3}')
+StdDeviation=$(echo "$result" | tail -n 7 | grep "Mean" | awk '{gsub("]",""); print $6}')
 
 echo "RESULT-LATENCY $latency"
 echo "RESULT-REQ $req_s"
 echo "RESULT-TRANSFER $transfer"
 echo "RESULT-TRANSFER $nbRequest"
+echo "RESULT-TRANSFER $mean"
+echo "RESULT-TRANSFER $StdDeviation"
