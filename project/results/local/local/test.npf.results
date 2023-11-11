@@ -1,1 +1,0 @@
-connection:16,debits:200,file_size:1024,key_size:512,numRounds:10,threads:2={LATENCY:0.01137,0.01328,0.01175},{REQ:105.17,105.22,105.23},{TRANSFER:230379.52,234229.76,230359.04}
