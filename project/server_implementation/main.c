@@ -93,29 +93,32 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
 
 void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
-  for (uint32_t i = 0; i < K; i++)
-  {
-    for (uint32_t j = 0; j < K; j++)
+    // Initialisation de la matrice résultante à zéro (comme dans le code optimisé)
+    for (uint32_t i = 0; i < K; i++)
     {
-      result[i * K + j] = 0;
+        for (uint32_t j = 0; j < K; j++)
+        {
+            result[i * K + j] = 0;
+        }
     }
-  }
 
-  for (uint32_t i = 0; i < K; i++)
-  {
-    for (uint32_t j = 0; j < K; j++)
+    // Boucle combinée qui utilise le 'loop unrolling' et l'optimisation 'cache-aware'
+    for (uint32_t i = 0; i < K; i++)
     {
-      int sum = 0;
-      for (uint32_t k = 0; k < K; k += 4)
-      {
-        sum += matrix1[i * K + k] * matrix2[k * K + j];
-        sum += matrix1[i * K + (k + 1)] * matrix2[(k + 1) * K + j];
-        sum += matrix1[i * K + (k + 2)] * matrix2[(k + 2) * K + j];
-        sum += matrix1[i * K + (k + 3)] * matrix2[(k + 3) * K + j];
-      }
-      result[i * K + j] = sum;
+        for (uint32_t j = 0; j < K; j++)
+        {
+            int r = matrix1[i * K + j];
+            
+            // Utilisation du 'loop unrolling' avec un pas de 4, ajusté pour les tailles de K non multiples de 4
+            for (uint32_t k = 0; k < K; k += 4)
+            {
+                result[i * K + k] += r * matrix2[j * K + k];
+                if (k + 1 < K) result[i * K + k + 1] += r * matrix2[j * K + k + 1];
+                if (k + 2 < K) result[i * K + k + 2] += r * matrix2[j * K + k + 2];
+                if (k + 3 < K) result[i * K + k + 3] += r * matrix2[j * K + k + 3];
+            }
+        }
     }
-  }
 }
 
 /**
