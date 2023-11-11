@@ -5,10 +5,10 @@
 #lua "./wrk_scripts/test.lua"
 
 # # tests
-#npf-run --test test.npf #--single-output "./data/results.csv"
+npf-run --test test.npf #--single-output "./data/results.csv"
 
 # # Appeler le script Python pour générer les graphiques
-python3 "python_scripts/scriptCsv.py"
+#python3 "python_scripts/scriptCsv.py"
 
 # PID=$(lsof -t -i :8888)
 # if [ ! -z "$PID" ]; then
