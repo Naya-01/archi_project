@@ -6,13 +6,16 @@ import os
 
 datas = pd.read_csv("./data/results.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
+datas['LATENCY'].fillna(datas['LATENCY'].mean(), inplace=True)
+datas['REQ'].fillna(datas['REQ'].mean(), inplace=True)
+datas['TRANSFER'] = datas['TRANSFER'] / 1024
+
 grouped_debits = datas.groupby('debits')
 
 plots_path = "./plots"
 file_extension = "pdf"
 markers = ['o', 's', '^', 'D', '*']
-colors = ['blue', 'green', 'purple', 'orange', 'red']
-
+colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
 
 def plot_data(grouped_data_param, x_column, y_column, ylabel, title, file_name):
@@ -36,22 +39,39 @@ def plot_data(grouped_data_param, x_column, y_column, ylabel, title, file_name):
 
 
 def generate_plot(x_col, y_col, secondary_col, y_label, file_prefix, title_prefix):
+    line_styles = ['-', '--', '-.', ':']  # Different line styles
+    marker_styles = ['o', 's', '^', 'D', '*']  # Different marker styles
+    alpha = 0.7  # Opacity of the lines and error bars
 
     for debits, group_data in grouped_debits:
         plt.figure(figsize=(10, 6))
-        grouped = group_data.groupby([x_col, secondary_col])[y_col].mean().reset_index()
+        grouped = group_data.groupby([x_col, secondary_col])[y_col].agg(['mean', 'std']).reset_index()
 
-        for unique_val in grouped[secondary_col].unique():
+        for idx, unique_val in enumerate(grouped[secondary_col].unique()):
             subset = grouped[grouped[secondary_col] == unique_val]
-            plt.plot(subset[x_col], subset[y_col], label=f"{secondary_col.capitalize()}: {unique_val}", marker='o')
+
+            # Using different line and marker styles, and slightly offsetting each line
+            x_values = subset[x_col] + idx * 0.01  # Offset to separate overlapping lines
+            line_style = line_styles[idx % len(line_styles)]
+            marker_style = marker_styles[idx % len(marker_styles)]
+
+            plt.errorbar(x_values, subset['mean'], yerr=subset['std'], label=f"{secondary_col.capitalize()}: {unique_val}", 
+                         marker=marker_style, linestyle=line_style, alpha=alpha)
         
         plt.legend()
         plt.xlabel(f"{x_col.capitalize().replace('_', ' ')} (bytes)")
         plt.ylabel(f"{y_label}")
         plt.title(f"{title_prefix} vs. {x_col.capitalize().replace('_', ' ')} for Different {secondary_col.capitalize()} (Debits: {debits})")
         plt.grid(True)
+
+        # Set the lower limit of Y-axis to 0
+        plt.ylim(bottom=0)
+
         plt.savefig(f"{plots_path}/{file_prefix}_debits_{debits}.{file_extension}")
         plt.close()
+
+
+
 
 # file vs key / Latency
 generate_plot('file_size', 'LATENCY', 'key_size', 'Average Latency (ms)', 'latency_vs_filesize', 'Average Latency')
@@ -64,23 +84,29 @@ generate_plot('file_size', 'REQ', 'threads', 'Average Request/Sec', 'request_vs_
 # file vs key / REQ
 generate_plot('file_size', 'REQ', 'key_size', 'Average REQ', 'req_latency_vs_filesize', 'Average REQ')
 
-grouped = datas.groupby(['threads', 'debits'])['LATENCY'].mean().unstack()
-colors = ['b', 'g', 'r', 'c', 'm', 'y']
+grouped = datas.groupby(['threads', 'debits'])['LATENCY'].agg(['mean', 'std', 'var']).unstack()
 plt.figure(figsize=(10, 6))
-debits = grouped.columns
+debits = grouped.columns.levels[1] 
 width = 0.3
-x = grouped.index
-bottom_values = np.zeros(len(x))
+x = np.arange(len(grouped))
 fig, ax = plt.subplots()
+min_y_val = 0
 for i, debit in enumerate(debits):
-    latencies = grouped[debit]
-    plt.bar(x + i * width, latencies, width, label=f"Debit: {debit}", color=colors[i])
+    latencies = grouped['mean'][debit]
+    std_dev = grouped['std'][debit]
+
+    min_latencies = latencies - std_dev
+    min_y_val = min(min_y_val, min_latencies.min())
+
+    plt.bar(x + i * width, latencies, width, label=f"Debit: {debit}", color=colors[i], yerr=std_dev)
+    
 plt.xlabel("Thread")
 plt.ylabel("Average Latency (ms)")
 plt.title("Average Latency vs. Thread for Different Debits")
 plt.legend()
 plt.grid(True)
-plt.xticks(x + width * len(debits) / 2, x)
+plt.xticks(x + width * (len(debits) - 1) / 2, grouped.index)
+plt.ylim(bottom=0)
 plt.savefig(f"{plots_path}/latency_vs_thread_debits.{file_extension}")
 plt.close()
 
@@ -95,5 +121,32 @@ plt.grid(axis='y')
 plt.tight_layout()
 plt.savefig(f"{plots_path}/Latency_NumRounds_Average_bar.{file_extension}")
 plt.close()
+
+
+def plot(dataframe, x_column, y_column, ylabel, title=''):
+    grouped_data = dataframe.groupby(x_column).agg({y_column: ['mean', 'std']}).reset_index()
+    grouped_data.columns = [x_column, f'{y_column}_mean', f'{y_column}_std']
+    print(grouped_data[f'{y_column}_std'])
+    lower_errors = np.maximum(grouped_data[f'{y_column}_mean'] - grouped_data[f'{y_column}_std'], 0)
+    upper_errors = grouped_data[f'{y_column}_std']
+    asymmetric_error = [grouped_data[f'{y_column}_mean'] - lower_errors, upper_errors]
+
+    plt.figure(figsize=(10, 6))
+    plt.errorbar(grouped_data[x_column], grouped_data[f'{y_column}_mean'], 
+                 yerr=asymmetric_error, fmt='o', ecolor='blue', capsize=5, 
+                 linestyle='-', color='blue')
+
+    plt.xlabel(x_column)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.ylim(bottom=0)
+    plt.grid(True)
+    title = title.replace(" ", "_")
+    plt.savefig(f"{plots_path}/{title}.{file_extension}")
+
+plot(datas, 'file_size', 'LATENCY', 'Latency (ms)', title='Latency according to the File Sizes')
+plot(datas, 'key_size', 'LATENCY', 'Latency (ms)', title='Latency according to the Key Sizes')
+plot(datas, 'file_size', 'TRANSFER', 'Throughput (Mb/sec)', title='Throughput according to the File Sizes')
+plot(datas, 'key_size', 'TRANSFER', 'Throughput (Mb/sec)', title='Throughput according to the Key Sizes')
 
 
