@@ -8,7 +8,7 @@ datas = pd.read_csv("./data/results.csv")
 datas['LATENCY'] = datas['LATENCY'] * 1000
 datas['LATENCY'].fillna(datas['LATENCY'].mean(), inplace=True)
 datas['REQ'].fillna(datas['REQ'].mean(), inplace=True)
-datas['TRANSFER'] = datas['TRANSFER'] / 1024
+datas['TRANSFER'] = datas['TRANSFER'] / (1024**2)
 
 grouped_debits = datas.groupby('debits')
 
