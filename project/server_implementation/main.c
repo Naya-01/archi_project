@@ -110,12 +110,16 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
             int r = matrix1[i * K + j];
             
             // Utilisation du 'loop unrolling' avec un pas de 4, ajusté pour les tailles de K non multiples de 4
-            for (uint32_t k = 0; k < K; k += 4)
+            for (uint32_t k = 0; k < K; k += 8)
             {
                 result[i * K + k] += r * matrix2[j * K + k];
                 if (k + 1 < K) result[i * K + k + 1] += r * matrix2[j * K + k + 1];
                 if (k + 2 < K) result[i * K + k + 2] += r * matrix2[j * K + k + 2];
                 if (k + 3 < K) result[i * K + k + 3] += r * matrix2[j * K + k + 3];
+                if (k + 4 < K) result[i * K + k + 4] += r * matrix2[j * K + k + 4];
+                if (k + 5 < K) result[i * K + k + 5] += r * matrix2[j * K + k + 5];
+                if (k + 6 < K) result[i * K + k + 6] += r * matrix2[j * K + k + 6];
+                if (k + 7 < K) result[i * K + k + 7] += r * matrix2[j * K + k + 7];
             }
         }
     }
@@ -159,13 +163,17 @@ void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
 
       uint32_t k = 0;
 
-      for (; k + 3 < key_size; k += 4)
+      for (; k + 7 < key_size; k += 8)
       {
-        key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3];
+        key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3] + key[k + 4] + key[k + 5] + key[k + 6] + key[k + 7];
         key[k] ^= i_j;
         key[k + 1] ^= i_j;
         key[k + 2] ^= i_j;
         key[k + 3] ^= i_j;
+        key[k + 4] ^= i_j;
+        key[k + 5] ^= i_j;
+        key[k + 6] ^= i_j;
+        key[k + 7] ^= i_j;
       }
 
       for (; k < key_size; k++)
