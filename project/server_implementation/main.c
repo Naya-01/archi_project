@@ -93,7 +93,6 @@ void parse_request(char *raw_request, uint32_t raw_request_len, struct parsed_re
 
 void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
-    // Initialisation de la matrice résultante à zéro (comme dans le code optimisé)
     for (uint32_t i = 0; i < K; i++)
     {
         for (uint32_t j = 0; j < K; j++)
@@ -109,17 +108,20 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
         {
             int r = matrix1[i * K + j];
             
-            // Utilisation du 'loop unrolling' avec un pas de 4, ajusté pour les tailles de K non multiples de 4
-            for (uint32_t k = 0; k < K; k += 8)
-            {
+            uint32_t k;
+            for (k = 0; k + 7 < K; k += 8) {
                 result[i * K + k] += r * matrix2[j * K + k];
-                if (k + 1 < K) result[i * K + k + 1] += r * matrix2[j * K + k + 1];
-                if (k + 2 < K) result[i * K + k + 2] += r * matrix2[j * K + k + 2];
-                if (k + 3 < K) result[i * K + k + 3] += r * matrix2[j * K + k + 3];
-                if (k + 4 < K) result[i * K + k + 4] += r * matrix2[j * K + k + 4];
-                if (k + 5 < K) result[i * K + k + 5] += r * matrix2[j * K + k + 5];
-                if (k + 6 < K) result[i * K + k + 6] += r * matrix2[j * K + k + 6];
-                if (k + 7 < K) result[i * K + k + 7] += r * matrix2[j * K + k + 7];
+                result[i * K + k + 1] += r * matrix2[j * K + k + 1];
+                result[i * K + k + 2] += r * matrix2[j * K + k + 2];
+                result[i * K + k + 3] += r * matrix2[j * K + k + 3];
+                result[i * K + k + 4] += r * matrix2[j * K + k + 4];
+                result[i * K + k + 5] += r * matrix2[j * K + k + 5];
+                result[i * K + k + 6] += r * matrix2[j * K + k + 6];
+                result[i * K + k + 7] += r * matrix2[j * K + k + 7];
+            }
+
+            for (; k < K; k++) {
+                result[i * K + k] += r * matrix2[j * K + k];
             }
         }
     }
