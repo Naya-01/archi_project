@@ -106,12 +106,16 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
     for (uint32_t j = 0; j < K; j++)
     {
       int sum = 0;
-      for (uint32_t k = 0; k < K; k += 4)
+      for (uint32_t k = 0; k + 7 < K; k += 8)
       {
         sum += matrix1[i * K + k] * matrix2[k * K + j];
         sum += matrix1[i * K + (k + 1)] * matrix2[(k + 1) * K + j];
         sum += matrix1[i * K + (k + 2)] * matrix2[(k + 2) * K + j];
         sum += matrix1[i * K + (k + 3)] * matrix2[(k + 3) * K + j];
+        sum += matrix1[i * K + (k + 4)] * matrix2[(k + 4) * K + j];
+        sum += matrix1[i * K + (k + 5)] * matrix2[(k + 5) * K + j];
+        sum += matrix1[i * K + (k + 6)] * matrix2[(k + 6) * K + j];
+        sum += matrix1[i * K + (k + 7)] * matrix2[(k + 7) * K + j];
       }
       result[i * K + j] = sum;
     }
@@ -156,13 +160,17 @@ void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
 
       uint32_t k = 0;
 
-      for (; k + 3 < key_size; k += 4)
+      for (; k + 7 < key_size; k += 8)
       {
-        key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3];
+        key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3] + key[k + 4] + key[k + 5] + key[k + 6] + key[k + 7];
         key[k] ^= i_j;
         key[k + 1] ^= i_j;
         key[k + 2] ^= i_j;
         key[k + 3] ^= i_j;
+        key[k + 4] ^= i_j;
+        key[k + 5] ^= i_j;
+        key[k + 6] ^= i_j;
+        key[k + 7] ^= i_j;
       }
 
       for (; k < key_size; k++)

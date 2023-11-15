@@ -2,26 +2,35 @@
 WRK2 tests
 
 %config
-var_unit={RESULT:us}
-var_format={RESULT:%d}
-
+n_runs=6
 
 %variables
 numRounds={10}
-file_size={1024}
+file_size={1024,262144}
 key_size={512}
 threads={2}
-debits={200}
 connection={16}
 
 %script@client 
 
-result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=0 -d30 -c${connection} --latency -t ${threads} -R${debits}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
-latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
-req=$(echo "$result" | grep "Req/Sec" | awk '{print $2 " " $3}')
-transfer=$(echo "$result" | grep "Transfer/sec" | awk '{print $2 " " $3}')
+rate=10000
 
+if [ ${file_size} -eq 262144 ]
+then
+    rate=50
+fi
+
+result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=1 -d30 -c${connection} --latency -t ${threads} -R${rate}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
+latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
+req_s=$(echo "$result" | grep "Requests/sec" |  awk '{print $2}')
+transfer=$(echo "$result" | grep "Transfer/sec" | awk '{print $2}')
+nbRequest=$(echo "$result" | grep "requests in" | awk '{print $1}')
+mean=$(echo "$result" | grep "#.*Mean" | awk '{gsub(",",""); print $3}')
+StdDeviation=$(echo "$result" | grep "#.*Mean" | awk '{gsub("]",""); print $6}')
 
 echo "RESULT-LATENCY $latency"
-echo "RESULT-REQ $req"
+echo "RESULT-REQ $req_s"
 echo "RESULT-TRANSFER $transfer"
+echo "RESULT-NBREQUEST $nbRequest"
+echo "RESULT-MEAN $mean"
+echo "RESULT-StdDeviation $StdDeviation"
