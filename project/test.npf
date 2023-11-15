@@ -13,7 +13,7 @@ connection={16}
 
 %script@client 
 
-rate=7000
+rate=10000
 
 if [ ${file_size} -eq 262144 ]
 then

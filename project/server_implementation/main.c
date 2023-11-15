@@ -103,7 +103,7 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
         {
             int r = matrix1[iK + j];
             uint32_t jK = j * K;
-            
+
             uint32_t k;
             for (k = 0; k + 7 < K; k += 8) {
                 result[iK + k] += r * matrix2[j * K + k];
@@ -115,7 +115,7 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
                 result[iK + k + 6] += r * matrix2[jK + k + 6];
                 result[iK + k + 7] += r * matrix2[jK + k + 7];
             }
-
+            // Traitement des éléments restants
             for (; k < K; k++) {
                 result[iK + k] += r * matrix2[jK + k];
             }
