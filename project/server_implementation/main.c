@@ -106,7 +106,8 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
     for (uint32_t j = 0; j < K; j++)
     {
       int sum = 0;
-      for (uint32_t k = 0; k + 7 < K; k += 8)
+      uint32_t k = 0;
+      for (; k + 7 < K; k += 8)
       {
         sum += matrix1[i * K + k] * matrix2[k * K + j];
         sum += matrix1[i * K + (k + 1)] * matrix2[(k + 1) * K + j];
@@ -116,6 +117,11 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
         sum += matrix1[i * K + (k + 5)] * matrix2[(k + 5) * K + j];
         sum += matrix1[i * K + (k + 6)] * matrix2[(k + 6) * K + j];
         sum += matrix1[i * K + (k + 7)] * matrix2[(k + 7) * K + j];
+      }
+
+      for (uint32_t k = 0; k < K; k++)
+      {
+        sum += matrix1[i * K + k] * matrix2[k * K + j];
       }
       result[i * K + j] = sum;
     }
