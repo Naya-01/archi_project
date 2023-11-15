@@ -6,7 +6,7 @@ n_runs=6
 
 %variables
 numRounds={10}
-file_size={1024,262144}
+file_size={1024}
 key_size={512}
 threads={2}
 connection={16}
