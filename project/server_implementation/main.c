@@ -159,34 +159,32 @@ void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
   {
     for (uint32_t j = 0; j < K; j++)
     {
-      uint32_t index = i * K + j;
-      int character = file[index];
+      int character = file[i * K + j];
       int key_sum = 0;
-      uint32_t i_j = i * j;
 
       uint32_t k = 0;
 
       for (; k + 7 < key_size; k += 8)
       {
         key_sum += key[k] + key[k + 1] + key[k + 2] + key[k + 3] + key[k + 4] + key[k + 5] + key[k + 6] + key[k + 7];
-        key[k] ^= i_j;
-        key[k + 1] ^= i_j;
-        key[k + 2] ^= i_j;
-        key[k + 3] ^= i_j;
-        key[k + 4] ^= i_j;
-        key[k + 5] ^= i_j;
-        key[k + 6] ^= i_j;
-        key[k + 7] ^= i_j;
+        key[k] ^= i * j;
+        key[k + 1] ^= i * j;
+        key[k + 2] ^= i * j;
+        key[k + 3] ^= i * j;
+        key[k + 4] ^= i * j;
+        key[k + 5] ^= i * j;
+        key[k + 6] ^= i * j;
+        key[k + 7] ^= i * j;
       }
 
       for (; k < key_size; k++)
       {
         key_sum += key[k];
-        key[k] ^= i_j;
+        key[k] ^= i * j;;
       }
 
       character ^= key_sum;
-      file[index] = character;
+      file[i * K + j] = character;
     }
   }
 }
