@@ -10,6 +10,7 @@ file_size={1024,262144}
 key_size={512}
 threads={2}
 connection={16}
+cores={1}
 
 %script@client 
 
