@@ -5,10 +5,10 @@ clean:
 	rm -f *.o *.so
 run:
 	echo "Application is running..."
-	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/project.conf -g "daemon off;"
+	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/project.conf -g "daemon off;worker_processes 8;"
 run_debug: build
 	echo "Application is running..."
 	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/project.conf -g "error_log /dev/stdout error; daemon off;"
 run_inginious: build
 	echo "Application is running..."
-	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/INGInious.conf -g "daemon off;"
+	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/INGInious.conf -g "daemon off;worker_processes 8;"
