@@ -2,6 +2,18 @@
 
 Welcome to this installation guide ! We'll guide you through the setup of LINFO2241's project :)
 
+## Updating your repository (Project 4)
+
+For this fourth part, the repository has been updated with a basic code to let each student focus on this fourth submission. This basic code is located on the `restart` branch, and is facultative. If your code is running well from Project 3's submission, you can keep your code and ignore this branch. However, if you need this code, you can simply run :
+
+```bash
+git checkout restart
+```
+
+It will give you a fresh branch to start the project.
+
+Concerning CUDA, refer to the project statement.
+
 ## SSH Setup (Mandatory for Mac users, recommended for the others)
 
 If you are using a MacOS computer, you must setup your SSH access to UCLouvain network to work on this project. To do so, you must go **physically** to the Intel room in Réaumur building and connect to a computer. Once connected, simply follow the following steps :
