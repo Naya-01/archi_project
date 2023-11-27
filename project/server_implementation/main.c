@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <immintrin.h>
 
 int is_service_on = 0;
 char *randomizator = "itfgiohtgiozerhjiopgzhrjioptgjheziopzioprgoipzerjutgiopuj"
@@ -186,6 +187,147 @@ void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
   }
 }
 
+#ifdef SIMD128
+void cipher_optimized_128(int *file, int *key, uint32_t key_size, uint32_t K)
+{
+    int *aligned_key = (int*)_mm_malloc(key_size * sizeof(int), 16);
+    for (uint32_t i = 0; i < key_size; ++i) {
+        aligned_key[i] = key[i];
+    }
+
+    for (uint32_t i = 0; i < K; i++) {
+        for (uint32_t j = 0; j < K; j++) {
+            uint32_t index = i * K + j;
+            int character = file[index];
+            __m128i vec_key_sum = _mm_setzero_si128();
+            uint32_t i_j = i * j;
+
+            uint32_t k = 0;
+            for (; k + 3 < key_size; k += 4) {
+                __m128i k_vec = _mm_load_si128((__m128i *)&aligned_key[k]);
+                __m128i i_j_vec = _mm_set1_epi32(i_j);
+                k_vec = _mm_xor_si128(k_vec, i_j_vec);
+                vec_key_sum = _mm_add_epi32(vec_key_sum, k_vec);
+            }
+
+            int key_sum_array[4];
+            _mm_store_si128((__m128i *)key_sum_array, vec_key_sum);
+            int key_sum = key_sum_array[0] + key_sum_array[1] + key_sum_array[2] + key_sum_array[3];
+
+            for (; k < key_size; k++) {
+                key_sum += aligned_key[k];
+                aligned_key[k] ^= i_j;
+            }
+
+            character ^= key_sum;
+            file[index] = character;
+        }
+    }
+
+    // Copy the contents back to the original key array and free the aligned memory
+    for (uint32_t i = 0; i < key_size; ++i) {
+        key[i] = aligned_key[i];
+    }
+    _mm_free(aligned_key);
+}
+#endif
+
+
+#ifdef SIMD256
+void cipher_optimized_256(int *file, int *key, uint32_t key_size, uint32_t K) {
+
+    int *aligned_key = (int*)_mm_malloc(key_size * sizeof(int), 32);
+    for (uint32_t i = 0; i < key_size; ++i) {
+        aligned_key[i] = key[i];
+    }
+
+    for (uint32_t i = 0; i < K; i++) {
+        for (uint32_t j = 0; j < K; j++) {
+            uint32_t index = i * K + j;
+            int character = file[index];
+            __m256i vec_key_sum = _mm256_setzero_si256(); 
+            uint32_t i_j = i * j;
+
+            uint32_t k = 0;
+            for (; k + 7 < key_size; k += 8) {
+                __m256i k_vec = _mm256_loadu_si256((__m256i *)&aligned_key[k]);
+                __m256i i_j_vec = _mm256_set1_epi32(i_j);
+                k_vec = _mm256_xor_si256(k_vec, i_j_vec);
+                vec_key_sum = _mm256_add_epi32(vec_key_sum, k_vec);
+            }
+
+            int key_sum_array[8];
+            _mm256_storeu_si256((__m256i *)key_sum_array, vec_key_sum);
+            int key_sum = 0;
+            for (int idx = 0; idx < 8; ++idx) {
+                key_sum += key_sum_array[idx];
+            }
+
+            for (; k < key_size; k++) {
+                key_sum += aligned_key[k];
+                aligned_key[k] ^= i_j;
+            }
+
+            character ^= key_sum;
+            file[index] = character;
+        }
+    }
+
+    // Copy the contents back to the original key array and free the aligned memory
+    for (uint32_t i = 0; i < key_size; ++i) {
+        key[i] = aligned_key[i];
+    }
+    _mm_free(aligned_key);
+}
+#endif
+
+#ifdef SIMD512
+void cipher_optimized_512(int *file, int *key, uint32_t key_size, uint32_t K) {
+
+    int *aligned_key = (int*)_mm_malloc(key_size * sizeof(int), 64);
+    for (uint32_t i = 0; i < key_size; ++i) {
+        aligned_key[i] = key[i];
+    }
+
+    for (uint32_t i = 0; i < K; i++) {
+        for (uint32_t j = 0; j < K; j++) {
+            uint32_t index = i * K + j;
+            int character = file[index];
+            __m512i vec_key_sum = _mm512_setzero_si512();
+            uint32_t i_j = i * j;
+
+            uint32_t k = 0;
+            for (; k + 15 < key_size; k += 16) {
+                __m512i k_vec = _mm512_loadu_si512((__m512i *)&aligned_key[k]);
+                __m512i i_j_vec = _mm512_set1_epi32(i_j);
+                k_vec = _mm512_xor_epi32(k_vec, i_j_vec);
+                vec_key_sum = _mm512_add_epi32(vec_key_sum, k_vec);
+            }
+
+            int key_sum_array[16];
+            _mm512_storeu_si512((__m512i *)key_sum_array, vec_key_sum);
+            int key_sum = 0;
+            for (int idx = 0; idx < 16; ++idx) {
+                key_sum += key_sum_array[idx];
+            }
+            
+            for (; k < key_size; k++) {
+                key_sum += aligned_key[k];
+                aligned_key[k] ^= i_j;
+            }
+
+            character ^= key_sum;
+            file[index] = character;
+        }
+    }
+
+    for (uint32_t i = 0; i < key_size; ++i) {
+        key[i] = aligned_key[i];
+    }
+    _mm_free(aligned_key);
+}
+#endif
+
 /**
  * @brief Encrypts a file
  *
@@ -322,9 +464,23 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
 
   for (size_t i = 0; i < parsed_request.nb_rounds; i++)
   {
-
+    #ifdef SIMD128
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized_128(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    #endif
+    #ifdef SIMD256
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized_256(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    #endif
+    #ifdef SIMD512
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    #endif
+    #ifdef SIMD
     multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
     cipher_optimized(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    #endif
+    
     // Swap pointers for the next iteration
     int *tmp = parsed_request.file;
     parsed_request.file = product;

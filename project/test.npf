@@ -6,7 +6,7 @@ n_runs=6
 
 %variables
 numRounds={10}
-file_size={1024,262144}
+file_size={1024}
 key_size={512}
 threads={2}
 connection={16}
@@ -14,11 +14,11 @@ cores={1}
 
 %script@client 
 
-rate=10000
+rate=20000
 
 if [ ${file_size} -eq 262144 ]
 then
-    rate=50
+    rate=200
 fi
 
 result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=1 -d30 -c${connection} --latency -t ${threads} -R${rate}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
