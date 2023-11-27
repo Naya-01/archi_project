@@ -1,5 +1,5 @@
 build:
-	gcc -I../../nginx-link-function/src -c -pedantic -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 clean:
@@ -23,23 +23,23 @@ run_cuda_checks: build_cuda
 
 build_cuda:
 	nvcc -c -DCUDA_BLOCK_SIZE=16 -std=c++11 -O1 -Xcompiler -fPIC accelerated.cu -o accelerated.o -lm -lcuda
-	gcc -DSIMT -std=c++11 -c -ggdb -fPIC -Wall -Wextra -pedantic -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O1 -g  main.c -o main.o -lm
+	gcc -DSIMT -std=c++11 -c -ggdb -fPIC -Wall -Wextra -pedantic -fno-unroll-loops -fno-tree-vectorize -O1 -g  main.c -o main.o -lm
 	nvcc -O1 -std=c++11 -shared -Xcompiler -mno-sse2,-mno-avx,-mno-avx2,-mno-avx512f,-fno-unroll-loops,-fno-tree-vectorize,-O1,-ggdb -o libmain.so accelerated.o main.o -lm -lcuda
 
 build_avx128:
-	gcc -I../../nginx-link-function/src -c -DSIMD128 -pedantic -mno-sse2 -mno-avx -mno-avx2 -mavx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD128 -mavx2 -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 build_avx256:
-	gcc -I../../nginx-link-function/src -c -DSIMD256 -pedantic -mno-sse2 -mno-avx -mno-avx2 -mavx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD256 -mavx2 -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 build_avx512:
-	gcc -I../../nginx-link-function/src -c -DSIMD512 -pedantic -mno-sse2 -mno-avx -mno-avx2 -mavx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD512 -mavx512f -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 build_avx_best:
-	gcc -I../../nginx-link-function/src -c -DSIMD -pedantic -mno-sse2 -mno-avx -mno-avx2 -mno-avx512f -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 run_simd128: build_avx128
