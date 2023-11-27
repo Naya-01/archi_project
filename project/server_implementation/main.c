@@ -129,32 +129,37 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
 #ifdef SIMD128
 void multiply_matrix_optimized_128(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
-    for(uint32_t i =0;i<k*k;i+=4){
-      __m128i zeros = _mm_setzero_si128();
-      _mm_store_si128((__m128i*)&result[i],zeros);
+  for (uint32_t i = 0; i < k * k; i += 4)
+  {
+    __m128i zeros = _mm_setzero_si128();
+    _mm_store_si128((__m128i *)&result[i], zeros);
+  }
+
+  for (uint32_t i = 0; i < K; i++)
+  {
+    uint32_t iK = i * K;
+    for (uint32_t j = 0; j < K; j++)
+    {
+      int r = matrix1[iK + j];
+      __m128i r_vec = _mm_set1_epi32(r);
+      uint32_t jK = j * K;
+
+      uint32_t k;
+      for (k = 0; k + 3 < K; k += 4)
+      {
+        __m128i res_vec = _mm_loadu_si128((__m128i *)&result[iK + k]);
+        __m128i m2_vec = _mm_loadu_si128((__m128i *)&matrix2[jK + k]);
+        __m128i prod_vec = _mm_mullo_epi32(r_vec, m2_vec);
+        res_vec = _mm_add_epi32(res_vec, prod_vec);
+        _mm_storeu_si128((__m128i *)&result[iK + k], res_vec);
+      }
+
+      for (; k < K; k++)
+      {
+        result[iK + k] += r * matrix2[jK + k];
+      }
     }
-
-    for (uint32_t i = 0; i < K; i++) {
-        uint32_t iK = i * K;
-        for (uint32_t j = 0; j < K; j++) {
-            int r = matrix1[iK + j];
-            __m128i r_vec = _mm_set1_epi32(r);
-            uint32_t jK = j * K;
-
-            uint32_t k;
-            for (k = 0; k + 3 < K; k += 4) {
-                __m128i res_vec = _mm_loadu_si128((__m128i*)&result[iK + k]);
-                __m128i m2_vec = _mm_loadu_si128((__m128i*)&matrix2[jK + k]);
-                __m128i prod_vec = _mm_mullo_epi32(r_vec, m2_vec);
-                res_vec = _mm_add_epi32(res_vec, prod_vec);
-                _mm_storeu_si128((__m128i*)&result[iK + k], res_vec);
-            }
-
-            for (; k < K; k++) {
-                result[iK + k] += r * matrix2[jK + k];
-            }
-        }
-    }
+  }
 }
 #endif
 
@@ -224,162 +229,132 @@ void cipher_optimized(int *file, int *key, uint32_t key_size, uint32_t K)
 #ifdef SIMD128
 void cipher_optimized_128(int *file, int *key, uint32_t key_size, uint32_t K)
 {
-  int *aligned_key = (int *)_mm_malloc(key_size * sizeof(int), 16);
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    aligned_key[i] = key[i];
-  }
-
   for (uint32_t i = 0; i < K; i++)
   {
     for (uint32_t j = 0; j < K; j++)
     {
       uint32_t index = i * K + j;
       int character = file[index];
-      __m128i vec_key_sum = _mm_setzero_si128();
+      int key_sum = 0;
       uint32_t i_j = i * j;
+
+      __m128i sum_vector = _mm_setzero_si128();
+      __m128i i_j_vector = _mm_set1_epi32(i_j);
 
       uint32_t k = 0;
       for (; k + 3 < key_size; k += 4)
       {
-        __m128i k_vec = _mm_load_si128((__m128i *)&aligned_key[k]);
-        __m128i i_j_vec = _mm_set1_epi32(i_j);
-        k_vec = _mm_xor_si128(k_vec, i_j_vec);
-        vec_key_sum = _mm_add_epi32(vec_key_sum, k_vec);
+        __m128i key_vector = _mm_loadu_si128((__m128i *)(key + k));
+        sum_vector = _mm_add_epi32(sum_vector, key_vector);
+        key_vector = _mm_xor_si128(key_vector, i_j_vector);
+        _mm_storeu_si128((__m128i *)(key + k), key_vector);
       }
 
-      int key_sum_array[4];
-      _mm_store_si128((__m128i *)key_sum_array, vec_key_sum);
-      int key_sum = key_sum_array[0] + key_sum_array[1] + key_sum_array[2] + key_sum_array[3];
+      key_sum += _mm_extract_epi32(sum_vector, 0);
+      key_sum += _mm_extract_epi32(sum_vector, 1);
+      key_sum += _mm_extract_epi32(sum_vector, 2);
+      key_sum += _mm_extract_epi32(sum_vector, 3);
 
       for (; k < key_size; k++)
       {
-        key_sum += aligned_key[k];
-        aligned_key[k] ^= i_j;
+        key_sum += key[k];
+        key[k] ^= i_j;
       }
 
       character ^= key_sum;
       file[index] = character;
     }
   }
-
-  // Copy the contents back to the original key array and free the aligned memory
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    key[i] = aligned_key[i];
-  }
-  _mm_free(aligned_key);
 }
 #endif
 
 #ifdef SIMD256
 void cipher_optimized_256(int *file, int *key, uint32_t key_size, uint32_t K)
 {
-
-  int *aligned_key = (int *)_mm_malloc(key_size * sizeof(int), 32);
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    aligned_key[i] = key[i];
-  }
-
   for (uint32_t i = 0; i < K; i++)
   {
     for (uint32_t j = 0; j < K; j++)
     {
       uint32_t index = i * K + j;
       int character = file[index];
-      __m256i vec_key_sum = _mm256_setzero_si256();
+      int key_sum = 0;
       uint32_t i_j = i * j;
+
+      __m256i sum_vector = _mm256_setzero_si256();
+      __m256i i_j_vector = _mm256_set1_epi32(i_j);
 
       uint32_t k = 0;
       for (; k + 7 < key_size; k += 8)
       {
-        __m256i k_vec = _mm256_loadu_si256((__m256i *)&aligned_key[k]);
-        __m256i i_j_vec = _mm256_set1_epi32(i_j);
-        k_vec = _mm256_xor_si256(k_vec, i_j_vec);
-        vec_key_sum = _mm256_add_epi32(vec_key_sum, k_vec);
+        __m256i key_vector = _mm256_loadu_si256((__m256i *)(key + k));
+        sum_vector = _mm256_add_epi32(sum_vector, key_vector);
+        key_vector = _mm256_xor_si256(key_vector, i_j_vector);
+        _mm256_storeu_si256((__m256i *)(key + k), key_vector);
       }
 
-      int key_sum_array[8];
-      _mm256_storeu_si256((__m256i *)key_sum_array, vec_key_sum);
-      int key_sum = 0;
-      for (int idx = 0; idx < 8; ++idx)
-      {
-        key_sum += key_sum_array[idx];
-      }
+      key_sum += _mm256_extract_epi32(sum_vector, 0);
+      key_sum += _mm256_extract_epi32(sum_vector, 1);
+      key_sum += _mm256_extract_epi32(sum_vector, 2);
+      key_sum += _mm256_extract_epi32(sum_vector, 3);
+      key_sum += _mm256_extract_epi32(sum_vector, 4);
+      key_sum += _mm256_extract_epi32(sum_vector, 5);
+      key_sum += _mm256_extract_epi32(sum_vector, 6);
+      key_sum += _mm256_extract_epi32(sum_vector, 7);
 
       for (; k < key_size; k++)
       {
-        key_sum += aligned_key[k];
-        aligned_key[k] ^= i_j;
+        key_sum += key[k];
+        key[k] ^= i_j;
       }
 
       character ^= key_sum;
       file[index] = character;
     }
   }
-
-  // Copy the contents back to the original key array and free the aligned memory
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    key[i] = aligned_key[i];
-  }
-  _mm_free(aligned_key);
 }
 #endif
 
 #ifdef SIMD512
 void cipher_optimized_512(int *file, int *key, uint32_t key_size, uint32_t K)
 {
-
-  int *aligned_key = (int *)_mm_malloc(key_size * sizeof(int), 64);
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    aligned_key[i] = key[i];
-  }
-
   for (uint32_t i = 0; i < K; i++)
   {
     for (uint32_t j = 0; j < K; j++)
     {
       uint32_t index = i * K + j;
       int character = file[index];
-      __m512i vec_key_sum = _mm512_setzero_si512();
+      int key_sum = 0;
       uint32_t i_j = i * j;
+
+      __m512i sum_vector = _mm512_setzero_si512();
+      __m512i i_j_vector = _mm512_set1_epi32(i_j);
 
       uint32_t k = 0;
       for (; k + 15 < key_size; k += 16)
       {
-        __m512i k_vec = _mm512_loadu_si512((__m512i *)&aligned_key[k]);
-        __m512i i_j_vec = _mm512_set1_epi32(i_j);
-        k_vec = _mm512_xor_epi32(k_vec, i_j_vec);
-        vec_key_sum = _mm512_add_epi32(vec_key_sum, k_vec);
+        __m512i key_vector = _mm512_loadu_si512((__m512i *)(key + k));
+        sum_vector = _mm512_add_epi32(sum_vector, key_vector);
+        key_vector = _mm512_xor_si512(key_vector, i_j_vector);
+        _mm512_storeu_si512((__m512i *)(key + k), key_vector);
       }
 
-      int key_sum_array[16];
-      _mm512_storeu_si512((__m512i *)key_sum_array, vec_key_sum);
-      int key_sum = 0;
-      for (int idx = 0; idx < 16; ++idx)
+      int buffer[16];
+      _mm512_storeu_si512((__m512i *)buffer, sum_vector);
+      for (int i = 0; i < 16; i++)
       {
-        key_sum += key_sum_array[idx];
+        key_sum += buffer[i];
       }
 
       for (; k < key_size; k++)
       {
-        key_sum += aligned_key[k];
-        aligned_key[k] ^= i_j;
+        key_sum += key[k];
+        key[k] ^= i_j;
       }
 
       character ^= key_sum;
       file[index] = character;
     }
   }
-
-  for (uint32_t i = 0; i < key_size; ++i)
-  {
-    key[i] = aligned_key[i];
-  }
-  _mm_free(aligned_key);
 }
 #endif
 
