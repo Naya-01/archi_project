@@ -129,6 +129,32 @@ void multiply_matrix_optimized(int *matrix1, int *matrix2, int *result, uint32_t
 #ifdef SIMD128
 void multiply_matrix_optimized_128(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
+    for(uint32_t i =0;i<k*k;i+=4){
+      __m128i zeros = _mm_setzero_si128();
+      _mm_store_si128((__m128i*)&result[i],zeros);
+    }
+
+    for (uint32_t i = 0; i < K; i++) {
+        uint32_t iK = i * K;
+        for (uint32_t j = 0; j < K; j++) {
+            int r = matrix1[iK + j];
+            __m128i r_vec = _mm_set1_epi32(r);
+            uint32_t jK = j * K;
+
+            uint32_t k;
+            for (k = 0; k + 3 < K; k += 4) {
+                __m128i res_vec = _mm_loadu_si128((__m128i*)&result[iK + k]);
+                __m128i m2_vec = _mm_loadu_si128((__m128i*)&matrix2[jK + k]);
+                __m128i prod_vec = _mm_mullo_epi32(r_vec, m2_vec);
+                res_vec = _mm_add_epi32(res_vec, prod_vec);
+                _mm_storeu_si128((__m128i*)&result[iK + k], res_vec);
+            }
+
+            for (; k < K; k++) {
+                result[iK + k] += r * matrix2[jK + k];
+            }
+        }
+    }
 }
 #endif
 
