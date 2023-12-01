@@ -27,7 +27,7 @@ build_cuda:
 	nvcc -O1 -std=c++11 -shared -Xcompiler -mno-sse2,-mno-avx,-mno-avx2,-mno-avx512f,-fno-unroll-loops,-fno-tree-vectorize,-O1,-ggdb -o libmain.so accelerated.o main.o -lm -lcuda
 
 build_avx128:
-	gcc -I../../nginx-link-function/src -c -DSIMD128 -mavx2 -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD128 -msse2 -mavx2 -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 build_avx256:
