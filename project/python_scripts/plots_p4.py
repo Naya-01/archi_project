@@ -5,28 +5,31 @@ import numpy as np
 # Lecture des données
 datas_128 = pd.read_csv("./data/results_128.csv")
 datas_256 = pd.read_csv("./data/results_256.csv")
+datas_512 = pd.read_csv("./data/results_512.csv")
 datas_best = pd.read_csv("./data/results_best.csv")
 
 plots_path = "./plots"
-file_extension = "pdf"
+file_extension = "png"
 colors = ['b', 'g', 'r']
 
 def prepare_data(file_size):
     means = [
         datas_128[datas_128['file_size'] == file_size]['REQ'].mean(),
         datas_256[datas_256['file_size'] == file_size]['REQ'].mean(),
+        datas_512[datas_512['file_size'] == file_size]['REQ'].mean(),
         datas_best[datas_best['file_size'] == file_size]['REQ'].mean()
     ]
     std_devs = [
         datas_128[datas_128['file_size'] == file_size]['REQ'].std(),
         datas_256[datas_256['file_size'] == file_size]['REQ'].std(),
+        datas_512[datas_512['file_size'] == file_size]['REQ'].std(),
         datas_best[datas_best['file_size'] == file_size]['REQ'].std()
     ]
     return means, std_devs
 
 def plot(size):
     average_req, std_dev_req = prepare_data(size)
-    labels = ['128', '256', 'Best']
+    labels = ['128', '256', '512', 'Best']
 
     x = np.arange(len(labels)) 
     width = 0.35 
@@ -50,7 +53,7 @@ def plot(size):
 
     fig.tight_layout()
 
-    plt.savefig(f"{plots_path}/REQ_bar_{size}.{file_extension}")
+    plt.savefig(f"{plots_path}/graph.{file_extension}")
     plt.close()
 
 plot(262144)

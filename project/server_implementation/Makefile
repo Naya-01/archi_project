@@ -39,7 +39,7 @@ build_avx512:
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 build_avx_best:
-	gcc -I../../nginx-link-function/src -c -DSIMD -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
+	gcc -I../../nginx-link-function/src -c -DSIMD -msse2 -mavx2 -mavx512f -pedantic -fno-unroll-loops -fno-tree-vectorize -O2 -ggdb -fPIC -Wall -Wextra -pedantic main.c -o main.o -lm $(CFLAGS)
 	gcc -shared -ggdb -o libmain.so main.o -lm
 
 run_simd128: build_avx128

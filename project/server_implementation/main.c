@@ -192,7 +192,7 @@ void multiply_matrix_optimized_256(int *matrix1, int *matrix2, int *result, uint
 }
 #endif
 
-#if defined(SIMD512) || defined(SIMD)
+#ifdef SIMD512
 void multiply_matrix_optimized_512(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
   memset(result, 0, K * K * sizeof(int));
@@ -214,6 +214,65 @@ void multiply_matrix_optimized_512(int *matrix1, int *matrix2, int *result, uint
         __m512i prod_vec = _mm512_mullo_epi32(r_vec, m2_vec);
         res_vec = _mm512_add_epi32(res_vec, prod_vec);
         _mm512_storeu_si512((__m512i *)&result[iK + k], res_vec);
+      }
+
+      for (; k < K; k++)
+      {
+        result[iK + k] += r * matrix2[jK + k];
+      }
+    }
+  }
+}
+#endif
+
+#ifdef SIMD
+void multiply_matrix_optimized_SIMD(int *matrix1, int *matrix2, int *result, uint32_t K)
+{
+  memset(result, 0, K * K * sizeof(int));
+
+  for (uint32_t i = 0; i < K; i++)
+  {
+    uint32_t iK = i * K;
+    for (uint32_t j = 0; j < K; j++)
+    {
+      int r = matrix1[iK + j];
+      __m512i r_vec = _mm512_set1_epi32(r);
+      uint32_t jK = j * K;
+
+      uint32_t k;
+      for (k = 0; k + 15 < K; k += 16)
+      {
+        __m512i res_vec = _mm512_loadu_si512((__m512i *)&result[iK + k]);
+        __m512i m2_vec = _mm512_loadu_si512((__m512i *)&matrix2[jK + k]);
+        __m512i prod_vec = _mm512_mullo_epi32(r_vec, m2_vec);
+        res_vec = _mm512_add_epi32(res_vec, prod_vec);
+        _mm512_storeu_si512((__m512i *)&result[iK + k], res_vec);
+      }
+
+      if (K - k >= 8)
+      {
+        __m256i r_vec_256 = _mm256_set1_epi32(r);
+        for (; k + 7 < K; k += 8)
+        {
+          __m256i res_vec = _mm256_loadu_si256((__m256i *)&result[iK + k]);
+          __m256i m2_vec = _mm256_loadu_si256((__m256i *)&matrix2[jK + k]);
+          __m256i prod_vec = _mm256_mullo_epi32(r_vec_256, m2_vec);
+          res_vec = _mm256_add_epi32(res_vec, prod_vec);
+          _mm256_storeu_si256((__m256i *)&result[iK + k], res_vec);
+        }
+      }
+
+      if (K - k >= 4)
+      {
+        __m128i r_vec_128 = _mm_set1_epi32(r);
+        for (; k + 3 < K; k += 4)
+        {
+          __m128i res_vec = _mm_loadu_si128((__m128i *)&result[iK + k]);
+          __m128i m2_vec = _mm_loadu_si128((__m128i *)&matrix2[jK + k]);
+          __m128i prod_vec = _mm_mullo_epi32(r_vec_128, m2_vec);
+          res_vec = _mm_add_epi32(res_vec, prod_vec);
+          _mm_storeu_si128((__m128i *)&result[iK + k], res_vec);
+        }
       }
 
       for (; k < K; k++)
@@ -376,7 +435,7 @@ void cipher_optimized_256(int *file, int *key, uint32_t key_size, uint32_t K)
 }
 #endif
 
-#if defined(SIMD512) || defined(SIMD)
+#ifdef SIMD512
 void cipher_optimized_512(int *file, int *key, uint32_t key_size, uint32_t K)
 {
   for (uint32_t i = 0; i < K; i++)
@@ -405,6 +464,90 @@ void cipher_optimized_512(int *file, int *key, uint32_t key_size, uint32_t K)
       for (int i = 0; i < 16; i++)
       {
         key_sum += buffer[i];
+      }
+
+      for (; k < key_size; k++)
+      {
+        key_sum += key[k];
+        key[k] ^= i_j;
+      }
+
+      character ^= key_sum;
+      file[index] = character;
+    }
+  }
+}
+#endif
+
+#ifdef SIMD
+void cipher_optimized_SIMD(int *file, int *key, uint32_t key_size, uint32_t K)
+{
+  for (uint32_t i = 0; i < K; i++)
+  {
+    for (uint32_t j = 0; j < K; j++)
+    {
+      uint32_t index = i * K + j;
+      int character = file[index];
+      int key_sum = 0;
+      uint32_t i_j = i * j;
+
+      __m512i sum_vector = _mm512_setzero_si512();
+      __m512i i_j_vector = _mm512_set1_epi32(i_j);
+
+      uint32_t k = 0;
+      for (; k + 15 < key_size; k += 16)
+      {
+        __m512i key_vector = _mm512_loadu_si512((__m512i *)(key + k));
+        sum_vector = _mm512_add_epi32(sum_vector, key_vector);
+        key_vector = _mm512_xor_si512(key_vector, i_j_vector);
+        _mm512_storeu_si512((__m512i *)(key + k), key_vector);
+      }
+
+      int buffer[16];
+      _mm512_storeu_si512((__m512i *)buffer, sum_vector);
+      for (int i = 0; i < 16; i++)
+      {
+        key_sum += buffer[i];
+      }
+
+      if (key_size - k >= 8)
+      {
+        __m256i i_j_vector_256 = _mm256_set1_epi32(i_j);
+        __m256i sum_vector_256 = _mm256_setzero_si256();
+        for (; k + 7 < key_size; k += 8)
+        {
+          __m256i key_vector_256 = _mm256_loadu_si256((__m256i *)(key + k));
+          sum_vector_256 = _mm256_add_epi32(sum_vector_256, key_vector_256);
+          key_vector_256 = _mm256_xor_si256(key_vector_256, i_j_vector_256);
+          _mm256_storeu_si256((__m256i *)(key + k), key_vector_256);
+        }
+
+        key_sum += _mm256_extract_epi32(sum_vector_256, 0);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 1);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 2);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 3);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 4);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 5);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 6);
+        key_sum += _mm256_extract_epi32(sum_vector_256, 7);
+      }
+
+      if (key_size - k >= 4)
+      {
+        __m128i i_j_vector_128 = _mm_set1_epi32(i_j);
+        __m128i sum_vector_128 = _mm_setzero_si128();
+        for (; k + 3 < key_size; k += 4)
+        {
+          __m128i key_vector_128 = _mm_loadu_si128((__m128i *)(key + k));
+          sum_vector_128 = _mm_add_epi32(sum_vector_128, key_vector_128);
+          key_vector_128 = _mm_xor_si128(key_vector_128, i_j_vector_128);
+          _mm_storeu_si128((__m128i *)(key + k), key_vector_128);
+        }
+
+        key_sum += _mm_extract_epi32(sum_vector_128, 0);
+        key_sum += _mm_extract_epi32(sum_vector_128, 1);
+        key_sum += _mm_extract_epi32(sum_vector_128, 2);
+        key_sum += _mm_extract_epi32(sum_vector_128, 3);
       }
 
       for (; k < key_size; k++)
@@ -569,8 +712,8 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
     cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
 #endif
 #ifdef SIMD
-    multiply_matrix_optimized_512(parsed_request.file, mutiplication_matrix, product, K);
-    cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    multiply_matrix_optimized_SIMD(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized_SIMD(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
 #endif
 
     // Swap pointers for the next iteration
