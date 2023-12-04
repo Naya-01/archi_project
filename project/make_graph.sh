@@ -2,7 +2,7 @@
 
 lua "./wrk_scripts/test.lua"
 
-make -C "./server_implementation" run_simd128 &
+make -C "./server_implementation" run_simd128_inginious &
 npf-run --test test.npf --single-output "./data/results_128.csv"
 
 PID=$(lsof -t -i :8888)
@@ -14,7 +14,7 @@ else
 fi
 
 
-make -C "./server_implementation" run_simd256 &
+make -C "./server_implementation" run_simd256_inginious &
 rm -rf results
 npf-run --test test.npf --single-output "./data/results_256.csv"
 
@@ -27,20 +27,20 @@ else
 fi
 
 
-# make -C "./server_implementation" run_simd512 &
-# rm -rf results
-# npf-run --test test.npf --single-output "./data/results_512.csv"
+make -C "./server_implementation" run_simd512_inginious &
+rm -rf results
+npf-run --test test.npf --single-output "./data/results_512.csv"
 
-# PID=$(lsof -t -i :8888)
-# if [ ! -z "$PID" ]; then
-#     kill -9 $PID
-#     echo "Processus avec PID $PID a été tué."
-# else
-#     echo "Aucun processus n'écoute sur le port 8888."
-# fi
+PID=$(lsof -t -i :8888)
+if [ ! -z "$PID" ]; then
+    kill -9 $PID
+    echo "Processus avec PID $PID a été tué."
+else
+    echo "Aucun processus n'écoute sur le port 8888."
+fi
 
 
-make -C "./server_implementation" run_simd_best &
+make -C "./server_implementation" run_simd_best_inginious &
 rm -rf results
 npf-run --test test.npf --single-output "./data/results_best.csv"
 

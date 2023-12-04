@@ -192,7 +192,7 @@ void multiply_matrix_optimized_256(int *matrix1, int *matrix2, int *result, uint
 }
 #endif
 
-#ifdef SIMD512
+#if defined(SIMD512) || defined(SIMD)
 void multiply_matrix_optimized_512(int *matrix1, int *matrix2, int *result, uint32_t K)
 {
   memset(result, 0, K * K * sizeof(int));
@@ -376,7 +376,7 @@ void cipher_optimized_256(int *file, int *key, uint32_t key_size, uint32_t K)
 }
 #endif
 
-#ifdef SIMD512
+#if defined(SIMD512) || defined(SIMD)
 void cipher_optimized_512(int *file, int *key, uint32_t key_size, uint32_t K)
 {
   for (uint32_t i = 0; i < K; i++)
@@ -569,8 +569,8 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
     cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
 #endif
 #ifdef SIMD
-    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
-    cipher_optimized(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+    multiply_matrix_optimized_512(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
 #endif
 
     // Swap pointers for the next iteration
