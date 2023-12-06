@@ -82,6 +82,11 @@ run_simd256_inginious: build_avx256
 run_simd512_inginious: build_avx512
 	echo "Application is running..."
 	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/INGInious.conf -g "daemon off;"
+
+run_simd_best_inginious: build_avx_best
+	echo "Application is running..."
+	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/INGInious.conf -g "daemon off;"
+
 run_simt_inginious: build_cuda
 	echo "Application is running..."
 	../../nginx/install/sbin/nginx -c ../../project/nginx-conf/INGInious.conf -g "daemon off;"

@@ -53,7 +53,8 @@ def plot(size):
 
     fig.tight_layout()
 
-    plt.savefig(f"{plots_path}/graph.{file_extension}")
+    plt.savefig(f"./graph.{file_extension}")
+    plt.savefig(f"./server_implementation/graph.{file_extension}")
     plt.close()
 
 plot(262144)

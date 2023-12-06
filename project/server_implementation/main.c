@@ -249,19 +249,6 @@ void multiply_matrix_optimized_SIMD(int *matrix1, int *matrix2, int *result, uin
         _mm512_storeu_si512((__m512i *)&result[iK + k], res_vec);
       }
 
-      if (K - k >= 8)
-      {
-        __m256i r_vec_256 = _mm256_set1_epi32(r);
-        for (; k + 7 < K; k += 8)
-        {
-          __m256i res_vec = _mm256_loadu_si256((__m256i *)&result[iK + k]);
-          __m256i m2_vec = _mm256_loadu_si256((__m256i *)&matrix2[jK + k]);
-          __m256i prod_vec = _mm256_mullo_epi32(r_vec_256, m2_vec);
-          res_vec = _mm256_add_epi32(res_vec, prod_vec);
-          _mm256_storeu_si256((__m256i *)&result[iK + k], res_vec);
-        }
-      }
-
       if (K - k >= 4)
       {
         __m128i r_vec_128 = _mm_set1_epi32(r);
@@ -491,45 +478,22 @@ void cipher_optimized_SIMD(int *file, int *key, uint32_t key_size, uint32_t K)
       int key_sum = 0;
       uint32_t i_j = i * j;
 
-      __m512i sum_vector = _mm512_setzero_si512();
-      __m512i i_j_vector = _mm512_set1_epi32(i_j);
-
+      __m512i i_j_vector_512 = _mm512_set1_epi32(i_j);
+      __m512i sum_vector_512 = _mm512_setzero_si512();
       uint32_t k = 0;
       for (; k + 15 < key_size; k += 16)
       {
         __m512i key_vector = _mm512_loadu_si512((__m512i *)(key + k));
-        sum_vector = _mm512_add_epi32(sum_vector, key_vector);
-        key_vector = _mm512_xor_si512(key_vector, i_j_vector);
+        sum_vector_512 = _mm512_add_epi32(sum_vector_512, key_vector);
+        key_vector = _mm512_xor_si512(key_vector, i_j_vector_512);
         _mm512_storeu_si512((__m512i *)(key + k), key_vector);
       }
 
-      int buffer[16];
-      _mm512_storeu_si512((__m512i *)buffer, sum_vector);
-      for (int i = 0; i < 16; i++)
+      int buffer_512[16];
+      _mm512_storeu_si512((__m512i *)buffer_512, sum_vector_512);
+      for (int b = 0; b < 16; b++)
       {
-        key_sum += buffer[i];
-      }
-
-      if (key_size - k >= 8)
-      {
-        __m256i i_j_vector_256 = _mm256_set1_epi32(i_j);
-        __m256i sum_vector_256 = _mm256_setzero_si256();
-        for (; k + 7 < key_size; k += 8)
-        {
-          __m256i key_vector_256 = _mm256_loadu_si256((__m256i *)(key + k));
-          sum_vector_256 = _mm256_add_epi32(sum_vector_256, key_vector_256);
-          key_vector_256 = _mm256_xor_si256(key_vector_256, i_j_vector_256);
-          _mm256_storeu_si256((__m256i *)(key + k), key_vector_256);
-        }
-
-        key_sum += _mm256_extract_epi32(sum_vector_256, 0);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 1);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 2);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 3);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 4);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 5);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 6);
-        key_sum += _mm256_extract_epi32(sum_vector_256, 7);
+        key_sum += buffer_512[b];
       }
 
       if (key_size - k >= 4)
@@ -544,10 +508,12 @@ void cipher_optimized_SIMD(int *file, int *key, uint32_t key_size, uint32_t K)
           _mm_storeu_si128((__m128i *)(key + k), key_vector_128);
         }
 
-        key_sum += _mm_extract_epi32(sum_vector_128, 0);
-        key_sum += _mm_extract_epi32(sum_vector_128, 1);
-        key_sum += _mm_extract_epi32(sum_vector_128, 2);
-        key_sum += _mm_extract_epi32(sum_vector_128, 3);
+        int buffer_128[4];
+        _mm_storeu_si128((__m128i *)buffer_128, sum_vector_128);
+        for (int b = 0; b < 4; b++)
+        {
+          key_sum += buffer_128[b];
+        }
       }
 
       for (; k < key_size; k++)
