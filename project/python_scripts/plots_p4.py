@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Lecture des données
+datas_naive = pd.read_csv("./data/results_naive.csv")
+datas_optimized = pd.read_csv("./data/results_optimized.csv")
 datas_128 = pd.read_csv("./data/results_128.csv")
 datas_256 = pd.read_csv("./data/results_256.csv")
 datas_512 = pd.read_csv("./data/results_512.csv")
@@ -14,12 +16,16 @@ colors = ['b', 'g', 'r']
 
 def prepare_data(file_size):
     means = [
+        datas_naive[datas_naive['file_size'] == file_size]['REQ'].mean(),
+        datas_optimized[datas_optimized['file_size'] == file_size]['REQ'].mean(),
         datas_128[datas_128['file_size'] == file_size]['REQ'].mean(),
         datas_256[datas_256['file_size'] == file_size]['REQ'].mean(),
         datas_512[datas_512['file_size'] == file_size]['REQ'].mean(),
         datas_best[datas_best['file_size'] == file_size]['REQ'].mean()
     ]
     std_devs = [
+        datas_naive[datas_naive['file_size'] == file_size]['REQ'].std(),
+        datas_optimized[datas_optimized['file_size'] == file_size]['REQ'].std(),
         datas_128[datas_128['file_size'] == file_size]['REQ'].std(),
         datas_256[datas_256['file_size'] == file_size]['REQ'].std(),
         datas_512[datas_512['file_size'] == file_size]['REQ'].std(),
@@ -29,8 +35,7 @@ def prepare_data(file_size):
 
 def plot(size):
     average_req, std_dev_req = prepare_data(size)
-    labels = ['128', '256', '512', 'Best']
-    # labels = ['256']
+    labels = ['naive', 'optimized', '128', '256', '512', 'Best']
 
     x = np.arange(len(labels)) 
     width = 0.35 

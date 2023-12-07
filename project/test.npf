@@ -16,7 +16,7 @@ rate={250}
 %script@client 
 
 
-result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=1 -d30 -c${connection} --latency -t ${threads} -R${rate}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
+result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=${VAR} -d20 -c${connection} --latency -t ${threads} -R${rate}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
 latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
 req_s=$(echo "$result" | grep "Requests/sec" |  awk '{print $2}')
 transfer=$(echo "$result" | grep "Transfer/sec" | awk '{print $2}')

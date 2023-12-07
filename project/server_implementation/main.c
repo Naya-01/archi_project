@@ -692,18 +692,18 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
 #ifdef SIMD128
     multiply_matrix_optimized_128(parsed_request.file, mutiplication_matrix, product, K);
     cipher_optimized_128(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
-#endif
-#ifdef SIMD256
+#elif SIMD256
     multiply_matrix_optimized_256(parsed_request.file, mutiplication_matrix, product, K);
     cipher_optimized_256(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
-#endif
-#ifdef SIMD512
+#elif SIMD512
     multiply_matrix_optimized_512(parsed_request.file, mutiplication_matrix, product, K);
     cipher_optimized_512(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
-#endif
-#ifdef SIMD
+#elif SIMD
     multiply_matrix_optimized_SIMD(parsed_request.file, mutiplication_matrix, product, K);
     cipher_optimized_SIMD(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
+#else
+    multiply_matrix_optimized(parsed_request.file, mutiplication_matrix, product, K);
+    cipher_optimized(product, parsed_request.key, parsed_request.key_size / sizeof(int), K);
 #endif
 
     // Swap pointers for the next iteration
