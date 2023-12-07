@@ -30,6 +30,7 @@ def prepare_data(file_size):
 def plot(size):
     average_req, std_dev_req = prepare_data(size)
     labels = ['128', '256', '512', 'Best']
+    # labels = ['256']
 
     x = np.arange(len(labels)) 
     width = 0.35 

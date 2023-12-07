@@ -2,7 +2,7 @@
 WRK2 tests
 
 %config
-n_runs=4
+n_runs=3
 
 %variables
 numRounds={10}
