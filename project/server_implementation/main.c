@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 
 int is_service_on = 0;
 char *randomizator = "itfgiohtgiozerhjiopgzhrjioptgjheziopzioprgoipzerjutgiopuj"
@@ -338,8 +339,16 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
   return encrypted_file.file;
 }
 
+long get_microseconds(struct timeval time) {
+    return (time.tv_sec * 1000000) + time.tv_usec;
+}
+
 void main_function(ngx_link_func_ctx_t *ctx)
 {
+
+    struct timeval start_time, end_time;
+
+    gettimeofday(&start_time, NULL);
 
   // Retrieve request's body
   char *body = (char *)ctx->req_body;
@@ -399,6 +408,25 @@ void main_function(ngx_link_func_ctx_t *ctx)
         sizeof("You forgot to set the response's length ! :angry:") - 1);
     return;
   }
+
+  gettimeofday(&end_time, NULL);
+
+
+  long service_time = get_microseconds(end_time) - get_microseconds(start_time);
+  const char *filename = "service_times.csv";
+  FILE *fp = fopen(filename, "a+");
+
+
+  fseek(fp, 0, SEEK_SET);
+  int c = fgetc(fp);
+  if (c == EOF) {
+    fprintf(fp, "ServiceTimeMicroseconds\n");
+  }
+
+  fseek(fp, 0, SEEK_END);
+  fprintf(fp, "%ld\n", service_time);
+  fclose(fp);
+
   // Return the response
   ngx_link_func_write_resp(ctx, 200, "200 OK", "text/plain", resp, resp_len);
 }
