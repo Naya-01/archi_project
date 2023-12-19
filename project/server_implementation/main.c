@@ -339,8 +339,8 @@ static char *body_processing_optimized(ngx_link_func_ctx_t *ctx, char *body,
   return encrypted_file.file;
 }
 
-long get_microseconds(struct timeval time) {
-    return (time.tv_sec * 1000000) + time.tv_usec;
+long get_milliseconds(struct timeval time) {
+    return (time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
 void main_function(ngx_link_func_ctx_t *ctx)
@@ -412,7 +412,7 @@ void main_function(ngx_link_func_ctx_t *ctx)
   gettimeofday(&end_time, NULL);
 
 
-  long service_time = get_microseconds(end_time) - get_microseconds(start_time);
+  long service_time = get_milliseconds(end_time) - get_milliseconds(start_time);
   const char *filename = "service_times.csv";
   FILE *fp = fopen(filename, "a+");
 
@@ -420,7 +420,7 @@ void main_function(ngx_link_func_ctx_t *ctx)
   fseek(fp, 0, SEEK_SET);
   int c = fgetc(fp);
   if (c == EOF) {
-    fprintf(fp, "ServiceTimeMicroseconds\n");
+    fprintf(fp, "ServiceTimeMilliseconds\n");
   }
 
   fseek(fp, 0, SEEK_END);

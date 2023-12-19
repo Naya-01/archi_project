@@ -12,7 +12,7 @@ plt.figure(figsize=(12, 8))
 plt.bar(values, counts, width=bar_width, color='blue', alpha=0.7, edgecolor='black')
 
 plt.title('Service Time Distribution')
-plt.xlabel('Service Time (microseconds)')
+plt.xlabel('Service Time (ms)')
 plt.ylabel('Frequency')
 plt.grid(True)
 plt.tight_layout()
