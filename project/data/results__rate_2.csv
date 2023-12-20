@@ -1,0 +1,4 @@
+index,build,test_index,numRounds,file_size,key_size,threads,connection,cores,RATE,LATENCY,REQ,TRANSFER,NBREQUEST,MEAN,StdDeviation,run_index
+0,local,0,10,262144,512,2,16,1,2,0.17357,2.2,576737.28,44.0,109.652,16.739,0
+1,local,0,10,262144,512,2,16,1,2,0.18265,2.2,576665.6,44.0,117.383,22.565,1
+2,local,0,10,262144,512,2,16,1,2,0.18009999999999998,2.2,576727.04,44.0,113.6,20.081,2

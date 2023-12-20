@@ -2,7 +2,7 @@
 WRK2 tests
 
 %config
-n_runs=5
+n_runs=3
 
 %variables
 numRounds={10}
@@ -11,12 +11,10 @@ key_size={512}
 threads={2}
 connection={16}
 cores={1}
-rate=200
-
 %script@client 
 
 
-result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=1 --dist exp -d20 -c${connection} --latency -t ${threads} -R${rate}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
+result=$(../../wrk2-DeathStarBench/wrk http://localhost:8888/?optimized=1 --dist exp -d20 -c${connection} --latency -t ${threads} -R${RATE}  -s ../wrk_scripts/script_${key_size}_${file_size}_${numRounds}.lua)
 latency=$(echo "$result" | grep -A 8 ".*Latency.*Distribution" | tail -n 1 | awk '{print $2}')
 req_s=$(echo "$result" | grep "Requests/sec" |  awk '{print $2}')
 transfer=$(echo "$result" | grep "Transfer/sec" | awk '{print $2}')
