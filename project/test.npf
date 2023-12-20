@@ -11,7 +11,7 @@ key_size={512}
 threads={2}
 connection={16}
 cores={1}
-rate=200
+rate={1,2,3,4,5,6,7,8,9}
 
 %script@client 
 
